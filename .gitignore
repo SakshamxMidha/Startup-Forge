@@ -1,0 +1,5 @@
+.env
+/src/generated/prisma
+
+# ArchitectIQ graph cache
+.architectiq/
