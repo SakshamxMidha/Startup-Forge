@@ -7,6 +7,15 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  passwordHash  String
+  createdAt     DateTime       @default(now())
+  startups      Startup[]
+  refreshTokens RefreshToken[]
+}
+
 model RefreshToken {
   id        String   @id @default(uuid())
   tokenHash String   @unique
@@ -17,20 +26,155 @@ model RefreshToken {
   createdAt DateTime @default(now())
 }
 
-model User {
-  id           String    @id @default(uuid())
-  email        String    @unique
-  passwordHash String
-  createdAt    DateTime  @default(now())
-  startups     Startup[]
-  refreshTokens RefreshToken[]
+model Startup {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  rawIdea   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  analysis       Analysis?
+  businessPlan   BusinessPlan?
+  marketReport   MarketReport?
+  schemaDesign   SchemaDesign?
+  pitchDeck      PitchDeck?
+  mentorMessages MentorMessage[]
 }
 
-model Startup {
+model Analysis {
+  id               String  @id @default(uuid())
+  startupId        String  @unique
+  startup          Startup @relation(fields: [startupId], references: [id])
+  marketScore      Float
+  difficultyScore  Float
+  revenueScore     Float
+  competitionLevel String // Low | Medium | High
+  timeToBuildWeeks Int
+  recommendation   String
+  reasoning        String // chain-of-thought, stored for transparency
+}
+
+model BusinessPlan {
+  id             String   @id @default(uuid())
+  startupId      String   @unique
+  startup        Startup  @relation(fields: [startupId], references: [id])
+  mission        String
+  vision         String
+  usp            String
+  targetAudience String
+  businessModel  String // subscription | commission | freemium
+
+  persona        Persona?
+  swotItems      SwotItem[]
+  revenueStreams RevenueStream[]
+  growthStrategy String[] // Postgres text array
+}
+
+model Persona {
+  id             String       @id @default(uuid())
+  businessPlanId String       @unique
+  businessPlan   BusinessPlan @relation(fields: [businessPlanId], references: [id])
+  name           String
+  ageRange       String
+  behavior       String
+  painPoints     PainPoint[]
+}
+
+model PainPoint {
+  id        String  @id @default(uuid())
+  personaId String
+  persona   Persona @relation(fields: [personaId], references: [id])
+  text      String
+}
+
+enum SwotCategory {
+  STRENGTH
+  WEAKNESS
+  OPPORTUNITY
+  THREAT
+}
+
+model SwotItem {
+  id             String       @id @default(uuid())
+  businessPlanId String
+  businessPlan   BusinessPlan @relation(fields: [businessPlanId], references: [id])
+  category       SwotCategory
+  text           String
+}
+
+model RevenueStream {
+  id             String       @id @default(uuid())
+  businessPlanId String
+  businessPlan   BusinessPlan @relation(fields: [businessPlanId], references: [id])
+  name           String
+  pricing        String
+}
+
+model MarketReport {
+  id             String   @id @default(uuid())
+  startupId      String   @unique
+  startup        Startup  @relation(fields: [startupId], references: [id])
+  trendDirection String // rising | flat | declining
+  summary        String // LLM-synthesized summary
+  cachedAt       DateTime
+
+  keywords      MarketKeyword[]
+  redditSignals RedditSignal[]
+  hnSignals     HnSignal[]
+}
+
+model MarketKeyword {
+  id             String       @id @default(uuid())
+  marketReportId String
+  marketReport   MarketReport @relation(fields: [marketReportId], references: [id])
+  keyword        String
+}
+
+model RedditSignal {
+  id             String       @id @default(uuid())
+  marketReportId String
+  marketReport   MarketReport @relation(fields: [marketReportId], references: [id])
+  subreddit      String
+  title          String
+  sentiment      String // positive | negative | neutral
+  url            String
+}
+
+model HnSignal {
+  id             String       @id @default(uuid())
+  marketReportId String
+  marketReport   MarketReport @relation(fields: [marketReportId], references: [id])
+  title          String
+  points         Int
+  url            String
+}
+
+model MentorMessage {
+  id        String   @id @default(uuid())
+  startupId String
+  startup   Startup  @relation(fields: [startupId], references: [id])
+  role      String // user | assistant
+  content   String
+  createdAt DateTime @default(now())
+}
+
+// Module 6 — Schema Generator. LLM returns entities+fields+relationships
+// as JSON; stored raw here, converted to mermaid erDiagram syntax at
+// render time by a pure function (no LLM call for the conversion step).
+model SchemaDesign {
+  id            String   @id @default(uuid())
+  startupId     String   @unique
+  startup       Startup  @relation(fields: [startupId], references: [id])
+  entitiesJson  Json // [{ name, fields: [{name, type}] }]
+  relationsJson Json // [{ from, to, type: "one-to-many" | "many-to-many" }]
+  generatedAt   DateTime @default(now())
+}
+
+model PitchDeck {
   id          String   @id @default(uuid())
-  name        String
-  description String
-  createdAt   DateTime @default(now())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
+  startupId   String   @unique
+  startup     Startup  @relation(fields: [startupId], references: [id])
+  pdfUrl      String
+  generatedAt DateTime @default(now())
 }

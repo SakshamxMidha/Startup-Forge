@@ -13,6 +13,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@prisma/adapter-pg": "^7.9.0",
     "@prisma/client": "^7.8.0",
     "bcrypt": "^6.0.0",
