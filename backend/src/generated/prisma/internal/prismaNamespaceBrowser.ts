@@ -51,9 +51,22 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  RefreshToken: 'RefreshToken',
   User: 'User',
-  Startup: 'Startup'
+  RefreshToken: 'RefreshToken',
+  Startup: 'Startup',
+  Analysis: 'Analysis',
+  BusinessPlan: 'BusinessPlan',
+  Persona: 'Persona',
+  PainPoint: 'PainPoint',
+  SwotItem: 'SwotItem',
+  RevenueStream: 'RevenueStream',
+  MarketReport: 'MarketReport',
+  MarketKeyword: 'MarketKeyword',
+  RedditSignal: 'RedditSignal',
+  HnSignal: 'HnSignal',
+  MentorMessage: 'MentorMessage',
+  SchemaDesign: 'SchemaDesign',
+  PitchDeck: 'PitchDeck'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -72,6 +85,16 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const UserScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  passwordHash: 'passwordHash',
+  createdAt: 'createdAt'
+} as const
+
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
 export const RefreshTokenScalarFieldEnum = {
   id: 'id',
   tokenHash: 'tokenHash',
@@ -84,25 +107,159 @@ export const RefreshTokenScalarFieldEnum = {
 export type RefreshTokenScalarFieldEnum = (typeof RefreshTokenScalarFieldEnum)[keyof typeof RefreshTokenScalarFieldEnum]
 
 
-export const UserScalarFieldEnum = {
-  id: 'id',
-  email: 'email',
-  passwordHash: 'passwordHash',
-  createdAt: 'createdAt'
-} as const
-
-export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
-
-
 export const StartupScalarFieldEnum = {
   id: 'id',
-  name: 'name',
-  description: 'description',
+  userId: 'userId',
+  rawIdea: 'rawIdea',
   createdAt: 'createdAt',
-  userId: 'userId'
+  updatedAt: 'updatedAt'
 } as const
 
 export type StartupScalarFieldEnum = (typeof StartupScalarFieldEnum)[keyof typeof StartupScalarFieldEnum]
+
+
+export const AnalysisScalarFieldEnum = {
+  id: 'id',
+  startupId: 'startupId',
+  marketScore: 'marketScore',
+  difficultyScore: 'difficultyScore',
+  revenueScore: 'revenueScore',
+  competitionLevel: 'competitionLevel',
+  timeToBuildWeeks: 'timeToBuildWeeks',
+  recommendation: 'recommendation',
+  reasoning: 'reasoning'
+} as const
+
+export type AnalysisScalarFieldEnum = (typeof AnalysisScalarFieldEnum)[keyof typeof AnalysisScalarFieldEnum]
+
+
+export const BusinessPlanScalarFieldEnum = {
+  id: 'id',
+  startupId: 'startupId',
+  mission: 'mission',
+  vision: 'vision',
+  usp: 'usp',
+  targetAudience: 'targetAudience',
+  businessModel: 'businessModel',
+  growthStrategy: 'growthStrategy'
+} as const
+
+export type BusinessPlanScalarFieldEnum = (typeof BusinessPlanScalarFieldEnum)[keyof typeof BusinessPlanScalarFieldEnum]
+
+
+export const PersonaScalarFieldEnum = {
+  id: 'id',
+  businessPlanId: 'businessPlanId',
+  name: 'name',
+  ageRange: 'ageRange',
+  behavior: 'behavior'
+} as const
+
+export type PersonaScalarFieldEnum = (typeof PersonaScalarFieldEnum)[keyof typeof PersonaScalarFieldEnum]
+
+
+export const PainPointScalarFieldEnum = {
+  id: 'id',
+  personaId: 'personaId',
+  text: 'text'
+} as const
+
+export type PainPointScalarFieldEnum = (typeof PainPointScalarFieldEnum)[keyof typeof PainPointScalarFieldEnum]
+
+
+export const SwotItemScalarFieldEnum = {
+  id: 'id',
+  businessPlanId: 'businessPlanId',
+  category: 'category',
+  text: 'text'
+} as const
+
+export type SwotItemScalarFieldEnum = (typeof SwotItemScalarFieldEnum)[keyof typeof SwotItemScalarFieldEnum]
+
+
+export const RevenueStreamScalarFieldEnum = {
+  id: 'id',
+  businessPlanId: 'businessPlanId',
+  name: 'name',
+  pricing: 'pricing'
+} as const
+
+export type RevenueStreamScalarFieldEnum = (typeof RevenueStreamScalarFieldEnum)[keyof typeof RevenueStreamScalarFieldEnum]
+
+
+export const MarketReportScalarFieldEnum = {
+  id: 'id',
+  startupId: 'startupId',
+  trendDirection: 'trendDirection',
+  summary: 'summary',
+  cachedAt: 'cachedAt'
+} as const
+
+export type MarketReportScalarFieldEnum = (typeof MarketReportScalarFieldEnum)[keyof typeof MarketReportScalarFieldEnum]
+
+
+export const MarketKeywordScalarFieldEnum = {
+  id: 'id',
+  marketReportId: 'marketReportId',
+  keyword: 'keyword'
+} as const
+
+export type MarketKeywordScalarFieldEnum = (typeof MarketKeywordScalarFieldEnum)[keyof typeof MarketKeywordScalarFieldEnum]
+
+
+export const RedditSignalScalarFieldEnum = {
+  id: 'id',
+  marketReportId: 'marketReportId',
+  subreddit: 'subreddit',
+  title: 'title',
+  sentiment: 'sentiment',
+  url: 'url'
+} as const
+
+export type RedditSignalScalarFieldEnum = (typeof RedditSignalScalarFieldEnum)[keyof typeof RedditSignalScalarFieldEnum]
+
+
+export const HnSignalScalarFieldEnum = {
+  id: 'id',
+  marketReportId: 'marketReportId',
+  title: 'title',
+  points: 'points',
+  url: 'url'
+} as const
+
+export type HnSignalScalarFieldEnum = (typeof HnSignalScalarFieldEnum)[keyof typeof HnSignalScalarFieldEnum]
+
+
+export const MentorMessageScalarFieldEnum = {
+  id: 'id',
+  startupId: 'startupId',
+  role: 'role',
+  content: 'content',
+  createdAt: 'createdAt'
+} as const
+
+export type MentorMessageScalarFieldEnum = (typeof MentorMessageScalarFieldEnum)[keyof typeof MentorMessageScalarFieldEnum]
+
+
+export const SchemaDesignScalarFieldEnum = {
+  id: 'id',
+  startupId: 'startupId',
+  entitiesJson: 'entitiesJson',
+  relationsJson: 'relationsJson',
+  generatedAt: 'generatedAt'
+} as const
+
+export type SchemaDesignScalarFieldEnum = (typeof SchemaDesignScalarFieldEnum)[keyof typeof SchemaDesignScalarFieldEnum]
+
+
+export const PitchDeckScalarFieldEnum = {
+  id: 'id',
+  startupId: 'startupId',
+  pdfUrl: 'pdfUrl',
+  generatedAt: 'generatedAt'
+} as const
+
+export type PitchDeckScalarFieldEnum = (typeof PitchDeckScalarFieldEnum)[keyof typeof PitchDeckScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -113,10 +270,26 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

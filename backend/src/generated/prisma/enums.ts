@@ -9,7 +9,11 @@
 * 🟢 You can import this file directly.
 */
 
+export const SwotCategory = {
+  STRENGTH: 'STRENGTH',
+  WEAKNESS: 'WEAKNESS',
+  OPPORTUNITY: 'OPPORTUNITY',
+  THREAT: 'THREAT'
+} as const
 
-
-// This file is empty because there are no enums in the schema.
-export {}
+export type SwotCategory = (typeof SwotCategory)[keyof typeof SwotCategory]

@@ -26,52 +26,52 @@ export type AggregateStartup = {
 
 export type StartupMinAggregateOutputType = {
   id: string | null
-  name: string | null
-  description: string | null
-  createdAt: Date | null
   userId: string | null
+  rawIdea: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type StartupMaxAggregateOutputType = {
   id: string | null
-  name: string | null
-  description: string | null
-  createdAt: Date | null
   userId: string | null
+  rawIdea: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type StartupCountAggregateOutputType = {
   id: number
-  name: number
-  description: number
-  createdAt: number
   userId: number
+  rawIdea: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
 
 export type StartupMinAggregateInputType = {
   id?: true
-  name?: true
-  description?: true
-  createdAt?: true
   userId?: true
+  rawIdea?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type StartupMaxAggregateInputType = {
   id?: true
-  name?: true
-  description?: true
-  createdAt?: true
   userId?: true
+  rawIdea?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type StartupCountAggregateInputType = {
   id?: true
-  name?: true
-  description?: true
-  createdAt?: true
   userId?: true
+  rawIdea?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -149,10 +149,10 @@ export type StartupGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type StartupGroupByOutputType = {
   id: string
-  name: string
-  description: string
-  createdAt: Date
   userId: string
+  rawIdea: string
+  createdAt: Date
+  updatedAt: Date
   _count: StartupCountAggregateOutputType | null
   _min: StartupMinAggregateOutputType | null
   _max: StartupMaxAggregateOutputType | null
@@ -178,20 +178,32 @@ export type StartupWhereInput = {
   OR?: Prisma.StartupWhereInput[]
   NOT?: Prisma.StartupWhereInput | Prisma.StartupWhereInput[]
   id?: Prisma.StringFilter<"Startup"> | string
-  name?: Prisma.StringFilter<"Startup"> | string
-  description?: Prisma.StringFilter<"Startup"> | string
-  createdAt?: Prisma.DateTimeFilter<"Startup"> | Date | string
   userId?: Prisma.StringFilter<"Startup"> | string
+  rawIdea?: Prisma.StringFilter<"Startup"> | string
+  createdAt?: Prisma.DateTimeFilter<"Startup"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Startup"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  analysis?: Prisma.XOR<Prisma.AnalysisNullableScalarRelationFilter, Prisma.AnalysisWhereInput> | null
+  businessPlan?: Prisma.XOR<Prisma.BusinessPlanNullableScalarRelationFilter, Prisma.BusinessPlanWhereInput> | null
+  marketReport?: Prisma.XOR<Prisma.MarketReportNullableScalarRelationFilter, Prisma.MarketReportWhereInput> | null
+  schemaDesign?: Prisma.XOR<Prisma.SchemaDesignNullableScalarRelationFilter, Prisma.SchemaDesignWhereInput> | null
+  pitchDeck?: Prisma.XOR<Prisma.PitchDeckNullableScalarRelationFilter, Prisma.PitchDeckWhereInput> | null
+  mentorMessages?: Prisma.MentorMessageListRelationFilter
 }
 
 export type StartupOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  rawIdea?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  analysis?: Prisma.AnalysisOrderByWithRelationInput
+  businessPlan?: Prisma.BusinessPlanOrderByWithRelationInput
+  marketReport?: Prisma.MarketReportOrderByWithRelationInput
+  schemaDesign?: Prisma.SchemaDesignOrderByWithRelationInput
+  pitchDeck?: Prisma.PitchDeckOrderByWithRelationInput
+  mentorMessages?: Prisma.MentorMessageOrderByRelationAggregateInput
 }
 
 export type StartupWhereUniqueInput = Prisma.AtLeast<{
@@ -199,19 +211,25 @@ export type StartupWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.StartupWhereInput | Prisma.StartupWhereInput[]
   OR?: Prisma.StartupWhereInput[]
   NOT?: Prisma.StartupWhereInput | Prisma.StartupWhereInput[]
-  name?: Prisma.StringFilter<"Startup"> | string
-  description?: Prisma.StringFilter<"Startup"> | string
-  createdAt?: Prisma.DateTimeFilter<"Startup"> | Date | string
   userId?: Prisma.StringFilter<"Startup"> | string
+  rawIdea?: Prisma.StringFilter<"Startup"> | string
+  createdAt?: Prisma.DateTimeFilter<"Startup"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Startup"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  analysis?: Prisma.XOR<Prisma.AnalysisNullableScalarRelationFilter, Prisma.AnalysisWhereInput> | null
+  businessPlan?: Prisma.XOR<Prisma.BusinessPlanNullableScalarRelationFilter, Prisma.BusinessPlanWhereInput> | null
+  marketReport?: Prisma.XOR<Prisma.MarketReportNullableScalarRelationFilter, Prisma.MarketReportWhereInput> | null
+  schemaDesign?: Prisma.XOR<Prisma.SchemaDesignNullableScalarRelationFilter, Prisma.SchemaDesignWhereInput> | null
+  pitchDeck?: Prisma.XOR<Prisma.PitchDeckNullableScalarRelationFilter, Prisma.PitchDeckWhereInput> | null
+  mentorMessages?: Prisma.MentorMessageListRelationFilter
 }, "id">
 
 export type StartupOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  rawIdea?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.StartupCountOrderByAggregateInput
   _max?: Prisma.StartupMaxOrderByAggregateInput
   _min?: Prisma.StartupMinOrderByAggregateInput
@@ -222,65 +240,89 @@ export type StartupScalarWhereWithAggregatesInput = {
   OR?: Prisma.StartupScalarWhereWithAggregatesInput[]
   NOT?: Prisma.StartupScalarWhereWithAggregatesInput | Prisma.StartupScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Startup"> | string
-  name?: Prisma.StringWithAggregatesFilter<"Startup"> | string
-  description?: Prisma.StringWithAggregatesFilter<"Startup"> | string
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Startup"> | Date | string
   userId?: Prisma.StringWithAggregatesFilter<"Startup"> | string
+  rawIdea?: Prisma.StringWithAggregatesFilter<"Startup"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Startup"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Startup"> | Date | string
 }
 
 export type StartupCreateInput = {
   id?: string
-  name: string
-  description: string
+  rawIdea: string
   createdAt?: Date | string
+  updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutStartupsInput
+  analysis?: Prisma.AnalysisCreateNestedOneWithoutStartupInput
+  businessPlan?: Prisma.BusinessPlanCreateNestedOneWithoutStartupInput
+  marketReport?: Prisma.MarketReportCreateNestedOneWithoutStartupInput
+  schemaDesign?: Prisma.SchemaDesignCreateNestedOneWithoutStartupInput
+  pitchDeck?: Prisma.PitchDeckCreateNestedOneWithoutStartupInput
+  mentorMessages?: Prisma.MentorMessageCreateNestedManyWithoutStartupInput
 }
 
 export type StartupUncheckedCreateInput = {
   id?: string
-  name: string
-  description: string
-  createdAt?: Date | string
   userId: string
+  rawIdea: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  analysis?: Prisma.AnalysisUncheckedCreateNestedOneWithoutStartupInput
+  businessPlan?: Prisma.BusinessPlanUncheckedCreateNestedOneWithoutStartupInput
+  marketReport?: Prisma.MarketReportUncheckedCreateNestedOneWithoutStartupInput
+  schemaDesign?: Prisma.SchemaDesignUncheckedCreateNestedOneWithoutStartupInput
+  pitchDeck?: Prisma.PitchDeckUncheckedCreateNestedOneWithoutStartupInput
+  mentorMessages?: Prisma.MentorMessageUncheckedCreateNestedManyWithoutStartupInput
 }
 
 export type StartupUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutStartupsNestedInput
+  analysis?: Prisma.AnalysisUpdateOneWithoutStartupNestedInput
+  businessPlan?: Prisma.BusinessPlanUpdateOneWithoutStartupNestedInput
+  marketReport?: Prisma.MarketReportUpdateOneWithoutStartupNestedInput
+  schemaDesign?: Prisma.SchemaDesignUpdateOneWithoutStartupNestedInput
+  pitchDeck?: Prisma.PitchDeckUpdateOneWithoutStartupNestedInput
+  mentorMessages?: Prisma.MentorMessageUpdateManyWithoutStartupNestedInput
 }
 
 export type StartupUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  analysis?: Prisma.AnalysisUncheckedUpdateOneWithoutStartupNestedInput
+  businessPlan?: Prisma.BusinessPlanUncheckedUpdateOneWithoutStartupNestedInput
+  marketReport?: Prisma.MarketReportUncheckedUpdateOneWithoutStartupNestedInput
+  schemaDesign?: Prisma.SchemaDesignUncheckedUpdateOneWithoutStartupNestedInput
+  pitchDeck?: Prisma.PitchDeckUncheckedUpdateOneWithoutStartupNestedInput
+  mentorMessages?: Prisma.MentorMessageUncheckedUpdateManyWithoutStartupNestedInput
 }
 
 export type StartupCreateManyInput = {
   id?: string
-  name: string
-  description: string
-  createdAt?: Date | string
   userId: string
+  rawIdea: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type StartupUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StartupUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StartupListRelationFilter = {
@@ -295,26 +337,31 @@ export type StartupOrderByRelationAggregateInput = {
 
 export type StartupCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  rawIdea?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type StartupMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  rawIdea?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type StartupMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  rawIdea?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type StartupScalarRelationFilter = {
+  is?: Prisma.StartupWhereInput
+  isNot?: Prisma.StartupWhereInput
 }
 
 export type StartupCreateNestedManyWithoutUserInput = {
@@ -359,18 +406,114 @@ export type StartupUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.StartupScalarWhereInput | Prisma.StartupScalarWhereInput[]
 }
 
+export type StartupCreateNestedOneWithoutAnalysisInput = {
+  create?: Prisma.XOR<Prisma.StartupCreateWithoutAnalysisInput, Prisma.StartupUncheckedCreateWithoutAnalysisInput>
+  connectOrCreate?: Prisma.StartupCreateOrConnectWithoutAnalysisInput
+  connect?: Prisma.StartupWhereUniqueInput
+}
+
+export type StartupUpdateOneRequiredWithoutAnalysisNestedInput = {
+  create?: Prisma.XOR<Prisma.StartupCreateWithoutAnalysisInput, Prisma.StartupUncheckedCreateWithoutAnalysisInput>
+  connectOrCreate?: Prisma.StartupCreateOrConnectWithoutAnalysisInput
+  upsert?: Prisma.StartupUpsertWithoutAnalysisInput
+  connect?: Prisma.StartupWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StartupUpdateToOneWithWhereWithoutAnalysisInput, Prisma.StartupUpdateWithoutAnalysisInput>, Prisma.StartupUncheckedUpdateWithoutAnalysisInput>
+}
+
+export type StartupCreateNestedOneWithoutBusinessPlanInput = {
+  create?: Prisma.XOR<Prisma.StartupCreateWithoutBusinessPlanInput, Prisma.StartupUncheckedCreateWithoutBusinessPlanInput>
+  connectOrCreate?: Prisma.StartupCreateOrConnectWithoutBusinessPlanInput
+  connect?: Prisma.StartupWhereUniqueInput
+}
+
+export type StartupUpdateOneRequiredWithoutBusinessPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.StartupCreateWithoutBusinessPlanInput, Prisma.StartupUncheckedCreateWithoutBusinessPlanInput>
+  connectOrCreate?: Prisma.StartupCreateOrConnectWithoutBusinessPlanInput
+  upsert?: Prisma.StartupUpsertWithoutBusinessPlanInput
+  connect?: Prisma.StartupWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StartupUpdateToOneWithWhereWithoutBusinessPlanInput, Prisma.StartupUpdateWithoutBusinessPlanInput>, Prisma.StartupUncheckedUpdateWithoutBusinessPlanInput>
+}
+
+export type StartupCreateNestedOneWithoutMarketReportInput = {
+  create?: Prisma.XOR<Prisma.StartupCreateWithoutMarketReportInput, Prisma.StartupUncheckedCreateWithoutMarketReportInput>
+  connectOrCreate?: Prisma.StartupCreateOrConnectWithoutMarketReportInput
+  connect?: Prisma.StartupWhereUniqueInput
+}
+
+export type StartupUpdateOneRequiredWithoutMarketReportNestedInput = {
+  create?: Prisma.XOR<Prisma.StartupCreateWithoutMarketReportInput, Prisma.StartupUncheckedCreateWithoutMarketReportInput>
+  connectOrCreate?: Prisma.StartupCreateOrConnectWithoutMarketReportInput
+  upsert?: Prisma.StartupUpsertWithoutMarketReportInput
+  connect?: Prisma.StartupWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StartupUpdateToOneWithWhereWithoutMarketReportInput, Prisma.StartupUpdateWithoutMarketReportInput>, Prisma.StartupUncheckedUpdateWithoutMarketReportInput>
+}
+
+export type StartupCreateNestedOneWithoutMentorMessagesInput = {
+  create?: Prisma.XOR<Prisma.StartupCreateWithoutMentorMessagesInput, Prisma.StartupUncheckedCreateWithoutMentorMessagesInput>
+  connectOrCreate?: Prisma.StartupCreateOrConnectWithoutMentorMessagesInput
+  connect?: Prisma.StartupWhereUniqueInput
+}
+
+export type StartupUpdateOneRequiredWithoutMentorMessagesNestedInput = {
+  create?: Prisma.XOR<Prisma.StartupCreateWithoutMentorMessagesInput, Prisma.StartupUncheckedCreateWithoutMentorMessagesInput>
+  connectOrCreate?: Prisma.StartupCreateOrConnectWithoutMentorMessagesInput
+  upsert?: Prisma.StartupUpsertWithoutMentorMessagesInput
+  connect?: Prisma.StartupWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StartupUpdateToOneWithWhereWithoutMentorMessagesInput, Prisma.StartupUpdateWithoutMentorMessagesInput>, Prisma.StartupUncheckedUpdateWithoutMentorMessagesInput>
+}
+
+export type StartupCreateNestedOneWithoutSchemaDesignInput = {
+  create?: Prisma.XOR<Prisma.StartupCreateWithoutSchemaDesignInput, Prisma.StartupUncheckedCreateWithoutSchemaDesignInput>
+  connectOrCreate?: Prisma.StartupCreateOrConnectWithoutSchemaDesignInput
+  connect?: Prisma.StartupWhereUniqueInput
+}
+
+export type StartupUpdateOneRequiredWithoutSchemaDesignNestedInput = {
+  create?: Prisma.XOR<Prisma.StartupCreateWithoutSchemaDesignInput, Prisma.StartupUncheckedCreateWithoutSchemaDesignInput>
+  connectOrCreate?: Prisma.StartupCreateOrConnectWithoutSchemaDesignInput
+  upsert?: Prisma.StartupUpsertWithoutSchemaDesignInput
+  connect?: Prisma.StartupWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StartupUpdateToOneWithWhereWithoutSchemaDesignInput, Prisma.StartupUpdateWithoutSchemaDesignInput>, Prisma.StartupUncheckedUpdateWithoutSchemaDesignInput>
+}
+
+export type StartupCreateNestedOneWithoutPitchDeckInput = {
+  create?: Prisma.XOR<Prisma.StartupCreateWithoutPitchDeckInput, Prisma.StartupUncheckedCreateWithoutPitchDeckInput>
+  connectOrCreate?: Prisma.StartupCreateOrConnectWithoutPitchDeckInput
+  connect?: Prisma.StartupWhereUniqueInput
+}
+
+export type StartupUpdateOneRequiredWithoutPitchDeckNestedInput = {
+  create?: Prisma.XOR<Prisma.StartupCreateWithoutPitchDeckInput, Prisma.StartupUncheckedCreateWithoutPitchDeckInput>
+  connectOrCreate?: Prisma.StartupCreateOrConnectWithoutPitchDeckInput
+  upsert?: Prisma.StartupUpsertWithoutPitchDeckInput
+  connect?: Prisma.StartupWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StartupUpdateToOneWithWhereWithoutPitchDeckInput, Prisma.StartupUpdateWithoutPitchDeckInput>, Prisma.StartupUncheckedUpdateWithoutPitchDeckInput>
+}
+
 export type StartupCreateWithoutUserInput = {
   id?: string
-  name: string
-  description: string
+  rawIdea: string
   createdAt?: Date | string
+  updatedAt?: Date | string
+  analysis?: Prisma.AnalysisCreateNestedOneWithoutStartupInput
+  businessPlan?: Prisma.BusinessPlanCreateNestedOneWithoutStartupInput
+  marketReport?: Prisma.MarketReportCreateNestedOneWithoutStartupInput
+  schemaDesign?: Prisma.SchemaDesignCreateNestedOneWithoutStartupInput
+  pitchDeck?: Prisma.PitchDeckCreateNestedOneWithoutStartupInput
+  mentorMessages?: Prisma.MentorMessageCreateNestedManyWithoutStartupInput
 }
 
 export type StartupUncheckedCreateWithoutUserInput = {
   id?: string
-  name: string
-  description: string
+  rawIdea: string
   createdAt?: Date | string
+  updatedAt?: Date | string
+  analysis?: Prisma.AnalysisUncheckedCreateNestedOneWithoutStartupInput
+  businessPlan?: Prisma.BusinessPlanUncheckedCreateNestedOneWithoutStartupInput
+  marketReport?: Prisma.MarketReportUncheckedCreateNestedOneWithoutStartupInput
+  schemaDesign?: Prisma.SchemaDesignUncheckedCreateNestedOneWithoutStartupInput
+  pitchDeck?: Prisma.PitchDeckUncheckedCreateNestedOneWithoutStartupInput
+  mentorMessages?: Prisma.MentorMessageUncheckedCreateNestedManyWithoutStartupInput
 }
 
 export type StartupCreateOrConnectWithoutUserInput = {
@@ -404,80 +547,543 @@ export type StartupScalarWhereInput = {
   OR?: Prisma.StartupScalarWhereInput[]
   NOT?: Prisma.StartupScalarWhereInput | Prisma.StartupScalarWhereInput[]
   id?: Prisma.StringFilter<"Startup"> | string
-  name?: Prisma.StringFilter<"Startup"> | string
-  description?: Prisma.StringFilter<"Startup"> | string
-  createdAt?: Prisma.DateTimeFilter<"Startup"> | Date | string
   userId?: Prisma.StringFilter<"Startup"> | string
+  rawIdea?: Prisma.StringFilter<"Startup"> | string
+  createdAt?: Prisma.DateTimeFilter<"Startup"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Startup"> | Date | string
+}
+
+export type StartupCreateWithoutAnalysisInput = {
+  id?: string
+  rawIdea: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutStartupsInput
+  businessPlan?: Prisma.BusinessPlanCreateNestedOneWithoutStartupInput
+  marketReport?: Prisma.MarketReportCreateNestedOneWithoutStartupInput
+  schemaDesign?: Prisma.SchemaDesignCreateNestedOneWithoutStartupInput
+  pitchDeck?: Prisma.PitchDeckCreateNestedOneWithoutStartupInput
+  mentorMessages?: Prisma.MentorMessageCreateNestedManyWithoutStartupInput
+}
+
+export type StartupUncheckedCreateWithoutAnalysisInput = {
+  id?: string
+  userId: string
+  rawIdea: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  businessPlan?: Prisma.BusinessPlanUncheckedCreateNestedOneWithoutStartupInput
+  marketReport?: Prisma.MarketReportUncheckedCreateNestedOneWithoutStartupInput
+  schemaDesign?: Prisma.SchemaDesignUncheckedCreateNestedOneWithoutStartupInput
+  pitchDeck?: Prisma.PitchDeckUncheckedCreateNestedOneWithoutStartupInput
+  mentorMessages?: Prisma.MentorMessageUncheckedCreateNestedManyWithoutStartupInput
+}
+
+export type StartupCreateOrConnectWithoutAnalysisInput = {
+  where: Prisma.StartupWhereUniqueInput
+  create: Prisma.XOR<Prisma.StartupCreateWithoutAnalysisInput, Prisma.StartupUncheckedCreateWithoutAnalysisInput>
+}
+
+export type StartupUpsertWithoutAnalysisInput = {
+  update: Prisma.XOR<Prisma.StartupUpdateWithoutAnalysisInput, Prisma.StartupUncheckedUpdateWithoutAnalysisInput>
+  create: Prisma.XOR<Prisma.StartupCreateWithoutAnalysisInput, Prisma.StartupUncheckedCreateWithoutAnalysisInput>
+  where?: Prisma.StartupWhereInput
+}
+
+export type StartupUpdateToOneWithWhereWithoutAnalysisInput = {
+  where?: Prisma.StartupWhereInput
+  data: Prisma.XOR<Prisma.StartupUpdateWithoutAnalysisInput, Prisma.StartupUncheckedUpdateWithoutAnalysisInput>
+}
+
+export type StartupUpdateWithoutAnalysisInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutStartupsNestedInput
+  businessPlan?: Prisma.BusinessPlanUpdateOneWithoutStartupNestedInput
+  marketReport?: Prisma.MarketReportUpdateOneWithoutStartupNestedInput
+  schemaDesign?: Prisma.SchemaDesignUpdateOneWithoutStartupNestedInput
+  pitchDeck?: Prisma.PitchDeckUpdateOneWithoutStartupNestedInput
+  mentorMessages?: Prisma.MentorMessageUpdateManyWithoutStartupNestedInput
+}
+
+export type StartupUncheckedUpdateWithoutAnalysisInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  businessPlan?: Prisma.BusinessPlanUncheckedUpdateOneWithoutStartupNestedInput
+  marketReport?: Prisma.MarketReportUncheckedUpdateOneWithoutStartupNestedInput
+  schemaDesign?: Prisma.SchemaDesignUncheckedUpdateOneWithoutStartupNestedInput
+  pitchDeck?: Prisma.PitchDeckUncheckedUpdateOneWithoutStartupNestedInput
+  mentorMessages?: Prisma.MentorMessageUncheckedUpdateManyWithoutStartupNestedInput
+}
+
+export type StartupCreateWithoutBusinessPlanInput = {
+  id?: string
+  rawIdea: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutStartupsInput
+  analysis?: Prisma.AnalysisCreateNestedOneWithoutStartupInput
+  marketReport?: Prisma.MarketReportCreateNestedOneWithoutStartupInput
+  schemaDesign?: Prisma.SchemaDesignCreateNestedOneWithoutStartupInput
+  pitchDeck?: Prisma.PitchDeckCreateNestedOneWithoutStartupInput
+  mentorMessages?: Prisma.MentorMessageCreateNestedManyWithoutStartupInput
+}
+
+export type StartupUncheckedCreateWithoutBusinessPlanInput = {
+  id?: string
+  userId: string
+  rawIdea: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  analysis?: Prisma.AnalysisUncheckedCreateNestedOneWithoutStartupInput
+  marketReport?: Prisma.MarketReportUncheckedCreateNestedOneWithoutStartupInput
+  schemaDesign?: Prisma.SchemaDesignUncheckedCreateNestedOneWithoutStartupInput
+  pitchDeck?: Prisma.PitchDeckUncheckedCreateNestedOneWithoutStartupInput
+  mentorMessages?: Prisma.MentorMessageUncheckedCreateNestedManyWithoutStartupInput
+}
+
+export type StartupCreateOrConnectWithoutBusinessPlanInput = {
+  where: Prisma.StartupWhereUniqueInput
+  create: Prisma.XOR<Prisma.StartupCreateWithoutBusinessPlanInput, Prisma.StartupUncheckedCreateWithoutBusinessPlanInput>
+}
+
+export type StartupUpsertWithoutBusinessPlanInput = {
+  update: Prisma.XOR<Prisma.StartupUpdateWithoutBusinessPlanInput, Prisma.StartupUncheckedUpdateWithoutBusinessPlanInput>
+  create: Prisma.XOR<Prisma.StartupCreateWithoutBusinessPlanInput, Prisma.StartupUncheckedCreateWithoutBusinessPlanInput>
+  where?: Prisma.StartupWhereInput
+}
+
+export type StartupUpdateToOneWithWhereWithoutBusinessPlanInput = {
+  where?: Prisma.StartupWhereInput
+  data: Prisma.XOR<Prisma.StartupUpdateWithoutBusinessPlanInput, Prisma.StartupUncheckedUpdateWithoutBusinessPlanInput>
+}
+
+export type StartupUpdateWithoutBusinessPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutStartupsNestedInput
+  analysis?: Prisma.AnalysisUpdateOneWithoutStartupNestedInput
+  marketReport?: Prisma.MarketReportUpdateOneWithoutStartupNestedInput
+  schemaDesign?: Prisma.SchemaDesignUpdateOneWithoutStartupNestedInput
+  pitchDeck?: Prisma.PitchDeckUpdateOneWithoutStartupNestedInput
+  mentorMessages?: Prisma.MentorMessageUpdateManyWithoutStartupNestedInput
+}
+
+export type StartupUncheckedUpdateWithoutBusinessPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  analysis?: Prisma.AnalysisUncheckedUpdateOneWithoutStartupNestedInput
+  marketReport?: Prisma.MarketReportUncheckedUpdateOneWithoutStartupNestedInput
+  schemaDesign?: Prisma.SchemaDesignUncheckedUpdateOneWithoutStartupNestedInput
+  pitchDeck?: Prisma.PitchDeckUncheckedUpdateOneWithoutStartupNestedInput
+  mentorMessages?: Prisma.MentorMessageUncheckedUpdateManyWithoutStartupNestedInput
+}
+
+export type StartupCreateWithoutMarketReportInput = {
+  id?: string
+  rawIdea: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutStartupsInput
+  analysis?: Prisma.AnalysisCreateNestedOneWithoutStartupInput
+  businessPlan?: Prisma.BusinessPlanCreateNestedOneWithoutStartupInput
+  schemaDesign?: Prisma.SchemaDesignCreateNestedOneWithoutStartupInput
+  pitchDeck?: Prisma.PitchDeckCreateNestedOneWithoutStartupInput
+  mentorMessages?: Prisma.MentorMessageCreateNestedManyWithoutStartupInput
+}
+
+export type StartupUncheckedCreateWithoutMarketReportInput = {
+  id?: string
+  userId: string
+  rawIdea: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  analysis?: Prisma.AnalysisUncheckedCreateNestedOneWithoutStartupInput
+  businessPlan?: Prisma.BusinessPlanUncheckedCreateNestedOneWithoutStartupInput
+  schemaDesign?: Prisma.SchemaDesignUncheckedCreateNestedOneWithoutStartupInput
+  pitchDeck?: Prisma.PitchDeckUncheckedCreateNestedOneWithoutStartupInput
+  mentorMessages?: Prisma.MentorMessageUncheckedCreateNestedManyWithoutStartupInput
+}
+
+export type StartupCreateOrConnectWithoutMarketReportInput = {
+  where: Prisma.StartupWhereUniqueInput
+  create: Prisma.XOR<Prisma.StartupCreateWithoutMarketReportInput, Prisma.StartupUncheckedCreateWithoutMarketReportInput>
+}
+
+export type StartupUpsertWithoutMarketReportInput = {
+  update: Prisma.XOR<Prisma.StartupUpdateWithoutMarketReportInput, Prisma.StartupUncheckedUpdateWithoutMarketReportInput>
+  create: Prisma.XOR<Prisma.StartupCreateWithoutMarketReportInput, Prisma.StartupUncheckedCreateWithoutMarketReportInput>
+  where?: Prisma.StartupWhereInput
+}
+
+export type StartupUpdateToOneWithWhereWithoutMarketReportInput = {
+  where?: Prisma.StartupWhereInput
+  data: Prisma.XOR<Prisma.StartupUpdateWithoutMarketReportInput, Prisma.StartupUncheckedUpdateWithoutMarketReportInput>
+}
+
+export type StartupUpdateWithoutMarketReportInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutStartupsNestedInput
+  analysis?: Prisma.AnalysisUpdateOneWithoutStartupNestedInput
+  businessPlan?: Prisma.BusinessPlanUpdateOneWithoutStartupNestedInput
+  schemaDesign?: Prisma.SchemaDesignUpdateOneWithoutStartupNestedInput
+  pitchDeck?: Prisma.PitchDeckUpdateOneWithoutStartupNestedInput
+  mentorMessages?: Prisma.MentorMessageUpdateManyWithoutStartupNestedInput
+}
+
+export type StartupUncheckedUpdateWithoutMarketReportInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  analysis?: Prisma.AnalysisUncheckedUpdateOneWithoutStartupNestedInput
+  businessPlan?: Prisma.BusinessPlanUncheckedUpdateOneWithoutStartupNestedInput
+  schemaDesign?: Prisma.SchemaDesignUncheckedUpdateOneWithoutStartupNestedInput
+  pitchDeck?: Prisma.PitchDeckUncheckedUpdateOneWithoutStartupNestedInput
+  mentorMessages?: Prisma.MentorMessageUncheckedUpdateManyWithoutStartupNestedInput
+}
+
+export type StartupCreateWithoutMentorMessagesInput = {
+  id?: string
+  rawIdea: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutStartupsInput
+  analysis?: Prisma.AnalysisCreateNestedOneWithoutStartupInput
+  businessPlan?: Prisma.BusinessPlanCreateNestedOneWithoutStartupInput
+  marketReport?: Prisma.MarketReportCreateNestedOneWithoutStartupInput
+  schemaDesign?: Prisma.SchemaDesignCreateNestedOneWithoutStartupInput
+  pitchDeck?: Prisma.PitchDeckCreateNestedOneWithoutStartupInput
+}
+
+export type StartupUncheckedCreateWithoutMentorMessagesInput = {
+  id?: string
+  userId: string
+  rawIdea: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  analysis?: Prisma.AnalysisUncheckedCreateNestedOneWithoutStartupInput
+  businessPlan?: Prisma.BusinessPlanUncheckedCreateNestedOneWithoutStartupInput
+  marketReport?: Prisma.MarketReportUncheckedCreateNestedOneWithoutStartupInput
+  schemaDesign?: Prisma.SchemaDesignUncheckedCreateNestedOneWithoutStartupInput
+  pitchDeck?: Prisma.PitchDeckUncheckedCreateNestedOneWithoutStartupInput
+}
+
+export type StartupCreateOrConnectWithoutMentorMessagesInput = {
+  where: Prisma.StartupWhereUniqueInput
+  create: Prisma.XOR<Prisma.StartupCreateWithoutMentorMessagesInput, Prisma.StartupUncheckedCreateWithoutMentorMessagesInput>
+}
+
+export type StartupUpsertWithoutMentorMessagesInput = {
+  update: Prisma.XOR<Prisma.StartupUpdateWithoutMentorMessagesInput, Prisma.StartupUncheckedUpdateWithoutMentorMessagesInput>
+  create: Prisma.XOR<Prisma.StartupCreateWithoutMentorMessagesInput, Prisma.StartupUncheckedCreateWithoutMentorMessagesInput>
+  where?: Prisma.StartupWhereInput
+}
+
+export type StartupUpdateToOneWithWhereWithoutMentorMessagesInput = {
+  where?: Prisma.StartupWhereInput
+  data: Prisma.XOR<Prisma.StartupUpdateWithoutMentorMessagesInput, Prisma.StartupUncheckedUpdateWithoutMentorMessagesInput>
+}
+
+export type StartupUpdateWithoutMentorMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutStartupsNestedInput
+  analysis?: Prisma.AnalysisUpdateOneWithoutStartupNestedInput
+  businessPlan?: Prisma.BusinessPlanUpdateOneWithoutStartupNestedInput
+  marketReport?: Prisma.MarketReportUpdateOneWithoutStartupNestedInput
+  schemaDesign?: Prisma.SchemaDesignUpdateOneWithoutStartupNestedInput
+  pitchDeck?: Prisma.PitchDeckUpdateOneWithoutStartupNestedInput
+}
+
+export type StartupUncheckedUpdateWithoutMentorMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  analysis?: Prisma.AnalysisUncheckedUpdateOneWithoutStartupNestedInput
+  businessPlan?: Prisma.BusinessPlanUncheckedUpdateOneWithoutStartupNestedInput
+  marketReport?: Prisma.MarketReportUncheckedUpdateOneWithoutStartupNestedInput
+  schemaDesign?: Prisma.SchemaDesignUncheckedUpdateOneWithoutStartupNestedInput
+  pitchDeck?: Prisma.PitchDeckUncheckedUpdateOneWithoutStartupNestedInput
+}
+
+export type StartupCreateWithoutSchemaDesignInput = {
+  id?: string
+  rawIdea: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutStartupsInput
+  analysis?: Prisma.AnalysisCreateNestedOneWithoutStartupInput
+  businessPlan?: Prisma.BusinessPlanCreateNestedOneWithoutStartupInput
+  marketReport?: Prisma.MarketReportCreateNestedOneWithoutStartupInput
+  pitchDeck?: Prisma.PitchDeckCreateNestedOneWithoutStartupInput
+  mentorMessages?: Prisma.MentorMessageCreateNestedManyWithoutStartupInput
+}
+
+export type StartupUncheckedCreateWithoutSchemaDesignInput = {
+  id?: string
+  userId: string
+  rawIdea: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  analysis?: Prisma.AnalysisUncheckedCreateNestedOneWithoutStartupInput
+  businessPlan?: Prisma.BusinessPlanUncheckedCreateNestedOneWithoutStartupInput
+  marketReport?: Prisma.MarketReportUncheckedCreateNestedOneWithoutStartupInput
+  pitchDeck?: Prisma.PitchDeckUncheckedCreateNestedOneWithoutStartupInput
+  mentorMessages?: Prisma.MentorMessageUncheckedCreateNestedManyWithoutStartupInput
+}
+
+export type StartupCreateOrConnectWithoutSchemaDesignInput = {
+  where: Prisma.StartupWhereUniqueInput
+  create: Prisma.XOR<Prisma.StartupCreateWithoutSchemaDesignInput, Prisma.StartupUncheckedCreateWithoutSchemaDesignInput>
+}
+
+export type StartupUpsertWithoutSchemaDesignInput = {
+  update: Prisma.XOR<Prisma.StartupUpdateWithoutSchemaDesignInput, Prisma.StartupUncheckedUpdateWithoutSchemaDesignInput>
+  create: Prisma.XOR<Prisma.StartupCreateWithoutSchemaDesignInput, Prisma.StartupUncheckedCreateWithoutSchemaDesignInput>
+  where?: Prisma.StartupWhereInput
+}
+
+export type StartupUpdateToOneWithWhereWithoutSchemaDesignInput = {
+  where?: Prisma.StartupWhereInput
+  data: Prisma.XOR<Prisma.StartupUpdateWithoutSchemaDesignInput, Prisma.StartupUncheckedUpdateWithoutSchemaDesignInput>
+}
+
+export type StartupUpdateWithoutSchemaDesignInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutStartupsNestedInput
+  analysis?: Prisma.AnalysisUpdateOneWithoutStartupNestedInput
+  businessPlan?: Prisma.BusinessPlanUpdateOneWithoutStartupNestedInput
+  marketReport?: Prisma.MarketReportUpdateOneWithoutStartupNestedInput
+  pitchDeck?: Prisma.PitchDeckUpdateOneWithoutStartupNestedInput
+  mentorMessages?: Prisma.MentorMessageUpdateManyWithoutStartupNestedInput
+}
+
+export type StartupUncheckedUpdateWithoutSchemaDesignInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  analysis?: Prisma.AnalysisUncheckedUpdateOneWithoutStartupNestedInput
+  businessPlan?: Prisma.BusinessPlanUncheckedUpdateOneWithoutStartupNestedInput
+  marketReport?: Prisma.MarketReportUncheckedUpdateOneWithoutStartupNestedInput
+  pitchDeck?: Prisma.PitchDeckUncheckedUpdateOneWithoutStartupNestedInput
+  mentorMessages?: Prisma.MentorMessageUncheckedUpdateManyWithoutStartupNestedInput
+}
+
+export type StartupCreateWithoutPitchDeckInput = {
+  id?: string
+  rawIdea: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutStartupsInput
+  analysis?: Prisma.AnalysisCreateNestedOneWithoutStartupInput
+  businessPlan?: Prisma.BusinessPlanCreateNestedOneWithoutStartupInput
+  marketReport?: Prisma.MarketReportCreateNestedOneWithoutStartupInput
+  schemaDesign?: Prisma.SchemaDesignCreateNestedOneWithoutStartupInput
+  mentorMessages?: Prisma.MentorMessageCreateNestedManyWithoutStartupInput
+}
+
+export type StartupUncheckedCreateWithoutPitchDeckInput = {
+  id?: string
+  userId: string
+  rawIdea: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  analysis?: Prisma.AnalysisUncheckedCreateNestedOneWithoutStartupInput
+  businessPlan?: Prisma.BusinessPlanUncheckedCreateNestedOneWithoutStartupInput
+  marketReport?: Prisma.MarketReportUncheckedCreateNestedOneWithoutStartupInput
+  schemaDesign?: Prisma.SchemaDesignUncheckedCreateNestedOneWithoutStartupInput
+  mentorMessages?: Prisma.MentorMessageUncheckedCreateNestedManyWithoutStartupInput
+}
+
+export type StartupCreateOrConnectWithoutPitchDeckInput = {
+  where: Prisma.StartupWhereUniqueInput
+  create: Prisma.XOR<Prisma.StartupCreateWithoutPitchDeckInput, Prisma.StartupUncheckedCreateWithoutPitchDeckInput>
+}
+
+export type StartupUpsertWithoutPitchDeckInput = {
+  update: Prisma.XOR<Prisma.StartupUpdateWithoutPitchDeckInput, Prisma.StartupUncheckedUpdateWithoutPitchDeckInput>
+  create: Prisma.XOR<Prisma.StartupCreateWithoutPitchDeckInput, Prisma.StartupUncheckedCreateWithoutPitchDeckInput>
+  where?: Prisma.StartupWhereInput
+}
+
+export type StartupUpdateToOneWithWhereWithoutPitchDeckInput = {
+  where?: Prisma.StartupWhereInput
+  data: Prisma.XOR<Prisma.StartupUpdateWithoutPitchDeckInput, Prisma.StartupUncheckedUpdateWithoutPitchDeckInput>
+}
+
+export type StartupUpdateWithoutPitchDeckInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutStartupsNestedInput
+  analysis?: Prisma.AnalysisUpdateOneWithoutStartupNestedInput
+  businessPlan?: Prisma.BusinessPlanUpdateOneWithoutStartupNestedInput
+  marketReport?: Prisma.MarketReportUpdateOneWithoutStartupNestedInput
+  schemaDesign?: Prisma.SchemaDesignUpdateOneWithoutStartupNestedInput
+  mentorMessages?: Prisma.MentorMessageUpdateManyWithoutStartupNestedInput
+}
+
+export type StartupUncheckedUpdateWithoutPitchDeckInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  analysis?: Prisma.AnalysisUncheckedUpdateOneWithoutStartupNestedInput
+  businessPlan?: Prisma.BusinessPlanUncheckedUpdateOneWithoutStartupNestedInput
+  marketReport?: Prisma.MarketReportUncheckedUpdateOneWithoutStartupNestedInput
+  schemaDesign?: Prisma.SchemaDesignUncheckedUpdateOneWithoutStartupNestedInput
+  mentorMessages?: Prisma.MentorMessageUncheckedUpdateManyWithoutStartupNestedInput
 }
 
 export type StartupCreateManyUserInput = {
   id?: string
-  name: string
-  description: string
+  rawIdea: string
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type StartupUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  analysis?: Prisma.AnalysisUpdateOneWithoutStartupNestedInput
+  businessPlan?: Prisma.BusinessPlanUpdateOneWithoutStartupNestedInput
+  marketReport?: Prisma.MarketReportUpdateOneWithoutStartupNestedInput
+  schemaDesign?: Prisma.SchemaDesignUpdateOneWithoutStartupNestedInput
+  pitchDeck?: Prisma.PitchDeckUpdateOneWithoutStartupNestedInput
+  mentorMessages?: Prisma.MentorMessageUpdateManyWithoutStartupNestedInput
 }
 
 export type StartupUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  analysis?: Prisma.AnalysisUncheckedUpdateOneWithoutStartupNestedInput
+  businessPlan?: Prisma.BusinessPlanUncheckedUpdateOneWithoutStartupNestedInput
+  marketReport?: Prisma.MarketReportUncheckedUpdateOneWithoutStartupNestedInput
+  schemaDesign?: Prisma.SchemaDesignUncheckedUpdateOneWithoutStartupNestedInput
+  pitchDeck?: Prisma.PitchDeckUncheckedUpdateOneWithoutStartupNestedInput
+  mentorMessages?: Prisma.MentorMessageUncheckedUpdateManyWithoutStartupNestedInput
 }
 
 export type StartupUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  rawIdea?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type StartupCountOutputType
+ */
+
+export type StartupCountOutputType = {
+  mentorMessages: number
+}
+
+export type StartupCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  mentorMessages?: boolean | StartupCountOutputTypeCountMentorMessagesArgs
+}
+
+/**
+ * StartupCountOutputType without action
+ */
+export type StartupCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StartupCountOutputType
+   */
+  select?: Prisma.StartupCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * StartupCountOutputType without action
+ */
+export type StartupCountOutputTypeCountMentorMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MentorMessageWhereInput
+}
 
 
 export type StartupSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
-  description?: boolean
-  createdAt?: boolean
   userId?: boolean
+  rawIdea?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  analysis?: boolean | Prisma.Startup$analysisArgs<ExtArgs>
+  businessPlan?: boolean | Prisma.Startup$businessPlanArgs<ExtArgs>
+  marketReport?: boolean | Prisma.Startup$marketReportArgs<ExtArgs>
+  schemaDesign?: boolean | Prisma.Startup$schemaDesignArgs<ExtArgs>
+  pitchDeck?: boolean | Prisma.Startup$pitchDeckArgs<ExtArgs>
+  mentorMessages?: boolean | Prisma.Startup$mentorMessagesArgs<ExtArgs>
+  _count?: boolean | Prisma.StartupCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["startup"]>
 
 export type StartupSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
-  description?: boolean
-  createdAt?: boolean
   userId?: boolean
+  rawIdea?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["startup"]>
 
 export type StartupSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
-  description?: boolean
-  createdAt?: boolean
   userId?: boolean
+  rawIdea?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["startup"]>
 
 export type StartupSelectScalar = {
   id?: boolean
-  name?: boolean
-  description?: boolean
-  createdAt?: boolean
   userId?: boolean
+  rawIdea?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type StartupOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "createdAt" | "userId", ExtArgs["result"]["startup"]>
+export type StartupOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "rawIdea" | "createdAt" | "updatedAt", ExtArgs["result"]["startup"]>
 export type StartupInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  analysis?: boolean | Prisma.Startup$analysisArgs<ExtArgs>
+  businessPlan?: boolean | Prisma.Startup$businessPlanArgs<ExtArgs>
+  marketReport?: boolean | Prisma.Startup$marketReportArgs<ExtArgs>
+  schemaDesign?: boolean | Prisma.Startup$schemaDesignArgs<ExtArgs>
+  pitchDeck?: boolean | Prisma.Startup$pitchDeckArgs<ExtArgs>
+  mentorMessages?: boolean | Prisma.Startup$mentorMessagesArgs<ExtArgs>
+  _count?: boolean | Prisma.StartupCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StartupIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -490,13 +1096,19 @@ export type $StartupPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Startup"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
+    analysis: Prisma.$AnalysisPayload<ExtArgs> | null
+    businessPlan: Prisma.$BusinessPlanPayload<ExtArgs> | null
+    marketReport: Prisma.$MarketReportPayload<ExtArgs> | null
+    schemaDesign: Prisma.$SchemaDesignPayload<ExtArgs> | null
+    pitchDeck: Prisma.$PitchDeckPayload<ExtArgs> | null
+    mentorMessages: Prisma.$MentorMessagePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    name: string
-    description: string
-    createdAt: Date
     userId: string
+    rawIdea: string
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["startup"]>
   composites: {}
 }
@@ -892,6 +1504,12 @@ readonly fields: StartupFieldRefs;
 export interface Prisma__StartupClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  analysis<T extends Prisma.Startup$analysisArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Startup$analysisArgs<ExtArgs>>): Prisma.Prisma__AnalysisClient<runtime.Types.Result.GetResult<Prisma.$AnalysisPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  businessPlan<T extends Prisma.Startup$businessPlanArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Startup$businessPlanArgs<ExtArgs>>): Prisma.Prisma__BusinessPlanClient<runtime.Types.Result.GetResult<Prisma.$BusinessPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  marketReport<T extends Prisma.Startup$marketReportArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Startup$marketReportArgs<ExtArgs>>): Prisma.Prisma__MarketReportClient<runtime.Types.Result.GetResult<Prisma.$MarketReportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  schemaDesign<T extends Prisma.Startup$schemaDesignArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Startup$schemaDesignArgs<ExtArgs>>): Prisma.Prisma__SchemaDesignClient<runtime.Types.Result.GetResult<Prisma.$SchemaDesignPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  pitchDeck<T extends Prisma.Startup$pitchDeckArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Startup$pitchDeckArgs<ExtArgs>>): Prisma.Prisma__PitchDeckClient<runtime.Types.Result.GetResult<Prisma.$PitchDeckPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  mentorMessages<T extends Prisma.Startup$mentorMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Startup$mentorMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MentorMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -922,10 +1540,10 @@ export interface Prisma__StartupClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface StartupFieldRefs {
   readonly id: Prisma.FieldRef<"Startup", 'String'>
-  readonly name: Prisma.FieldRef<"Startup", 'String'>
-  readonly description: Prisma.FieldRef<"Startup", 'String'>
-  readonly createdAt: Prisma.FieldRef<"Startup", 'DateTime'>
   readonly userId: Prisma.FieldRef<"Startup", 'String'>
+  readonly rawIdea: Prisma.FieldRef<"Startup", 'String'>
+  readonly createdAt: Prisma.FieldRef<"Startup", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Startup", 'DateTime'>
 }
     
 
@@ -1324,6 +1942,125 @@ export type StartupDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Startups to delete.
    */
   limit?: number
+}
+
+/**
+ * Startup.analysis
+ */
+export type Startup$analysisArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Analysis
+   */
+  select?: Prisma.AnalysisSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Analysis
+   */
+  omit?: Prisma.AnalysisOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AnalysisInclude<ExtArgs> | null
+  where?: Prisma.AnalysisWhereInput
+}
+
+/**
+ * Startup.businessPlan
+ */
+export type Startup$businessPlanArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BusinessPlan
+   */
+  select?: Prisma.BusinessPlanSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BusinessPlan
+   */
+  omit?: Prisma.BusinessPlanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BusinessPlanInclude<ExtArgs> | null
+  where?: Prisma.BusinessPlanWhereInput
+}
+
+/**
+ * Startup.marketReport
+ */
+export type Startup$marketReportArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MarketReport
+   */
+  select?: Prisma.MarketReportSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MarketReport
+   */
+  omit?: Prisma.MarketReportOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MarketReportInclude<ExtArgs> | null
+  where?: Prisma.MarketReportWhereInput
+}
+
+/**
+ * Startup.schemaDesign
+ */
+export type Startup$schemaDesignArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SchemaDesign
+   */
+  select?: Prisma.SchemaDesignSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SchemaDesign
+   */
+  omit?: Prisma.SchemaDesignOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SchemaDesignInclude<ExtArgs> | null
+  where?: Prisma.SchemaDesignWhereInput
+}
+
+/**
+ * Startup.pitchDeck
+ */
+export type Startup$pitchDeckArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PitchDeck
+   */
+  select?: Prisma.PitchDeckSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PitchDeck
+   */
+  omit?: Prisma.PitchDeckOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PitchDeckInclude<ExtArgs> | null
+  where?: Prisma.PitchDeckWhereInput
+}
+
+/**
+ * Startup.mentorMessages
+ */
+export type Startup$mentorMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MentorMessage
+   */
+  select?: Prisma.MentorMessageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MentorMessage
+   */
+  omit?: Prisma.MentorMessageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MentorMessageInclude<ExtArgs> | null
+  where?: Prisma.MentorMessageWhereInput
+  orderBy?: Prisma.MentorMessageOrderByWithRelationInput | Prisma.MentorMessageOrderByWithRelationInput[]
+  cursor?: Prisma.MentorMessageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MentorMessageScalarFieldEnum | Prisma.MentorMessageScalarFieldEnum[]
 }
 
 /**

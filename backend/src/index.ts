@@ -3,12 +3,14 @@ import express from 'express';
 import prisma from './lib/prisma';
 import authRouter from './routes/auth';
 import meRouter from './routes/me';
+import startupsRouter from './routes/startups';
 
 const app = express();
 app.use(express.json());
 
 app.use('/auth', authRouter);
 app.use('/', meRouter);
+app.use('/startups', startupsRouter);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });

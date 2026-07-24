@@ -302,6 +302,16 @@ export type RefreshTokenUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type RefreshTokenListRelationFilter = {
+  every?: Prisma.RefreshTokenWhereInput
+  some?: Prisma.RefreshTokenWhereInput
+  none?: Prisma.RefreshTokenWhereInput
+}
+
+export type RefreshTokenOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
 export type RefreshTokenCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
@@ -327,28 +337,6 @@ export type RefreshTokenMinOrderByAggregateInput = {
   expiresAt?: Prisma.SortOrder
   revoked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-}
-
-export type RefreshTokenListRelationFilter = {
-  every?: Prisma.RefreshTokenWhereInput
-  some?: Prisma.RefreshTokenWhereInput
-  none?: Prisma.RefreshTokenWhereInput
-}
-
-export type RefreshTokenOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
-
-export type StringFieldUpdateOperationsInput = {
-  set?: string
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
 }
 
 export type RefreshTokenCreateNestedManyWithoutUserInput = {
@@ -391,6 +379,10 @@ export type RefreshTokenUncheckedUpdateManyWithoutUserNestedInput = {
   update?: Prisma.RefreshTokenUpdateWithWhereUniqueWithoutUserInput | Prisma.RefreshTokenUpdateWithWhereUniqueWithoutUserInput[]
   updateMany?: Prisma.RefreshTokenUpdateManyWithWhereWithoutUserInput | Prisma.RefreshTokenUpdateManyWithWhereWithoutUserInput[]
   deleteMany?: Prisma.RefreshTokenScalarWhereInput | Prisma.RefreshTokenScalarWhereInput[]
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type RefreshTokenCreateWithoutUserInput = {

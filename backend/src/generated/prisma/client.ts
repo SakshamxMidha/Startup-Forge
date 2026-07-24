@@ -31,8 +31,8 @@ export * from "./enums.js"
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more RefreshTokens
- * const refreshTokens = await prisma.refreshToken.findMany()
+ * // Fetch zero or more Users
+ * const users = await prisma.user.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -42,17 +42,82 @@ export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts exten
 export { Prisma }
 
 /**
- * Model RefreshToken
- * 
- */
-export type RefreshToken = Prisma.RefreshTokenModel
-/**
  * Model User
  * 
  */
 export type User = Prisma.UserModel
 /**
+ * Model RefreshToken
+ * 
+ */
+export type RefreshToken = Prisma.RefreshTokenModel
+/**
  * Model Startup
  * 
  */
 export type Startup = Prisma.StartupModel
+/**
+ * Model Analysis
+ * 
+ */
+export type Analysis = Prisma.AnalysisModel
+/**
+ * Model BusinessPlan
+ * 
+ */
+export type BusinessPlan = Prisma.BusinessPlanModel
+/**
+ * Model Persona
+ * 
+ */
+export type Persona = Prisma.PersonaModel
+/**
+ * Model PainPoint
+ * 
+ */
+export type PainPoint = Prisma.PainPointModel
+/**
+ * Model SwotItem
+ * 
+ */
+export type SwotItem = Prisma.SwotItemModel
+/**
+ * Model RevenueStream
+ * 
+ */
+export type RevenueStream = Prisma.RevenueStreamModel
+/**
+ * Model MarketReport
+ * 
+ */
+export type MarketReport = Prisma.MarketReportModel
+/**
+ * Model MarketKeyword
+ * 
+ */
+export type MarketKeyword = Prisma.MarketKeywordModel
+/**
+ * Model RedditSignal
+ * 
+ */
+export type RedditSignal = Prisma.RedditSignalModel
+/**
+ * Model HnSignal
+ * 
+ */
+export type HnSignal = Prisma.HnSignalModel
+/**
+ * Model MentorMessage
+ * 
+ */
+export type MentorMessage = Prisma.MentorMessageModel
+/**
+ * Model SchemaDesign
+ * 
+ */
+export type SchemaDesign = Prisma.SchemaDesignModel
+/**
+ * Model PitchDeck
+ * 
+ */
+export type PitchDeck = Prisma.PitchDeckModel

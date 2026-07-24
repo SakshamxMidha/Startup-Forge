@@ -18,17 +18,82 @@ export { Prisma }
 export * as $Enums from './enums.js'
 export * from './enums.js';
 /**
- * Model RefreshToken
- * 
- */
-export type RefreshToken = Prisma.RefreshTokenModel
-/**
  * Model User
  * 
  */
 export type User = Prisma.UserModel
 /**
+ * Model RefreshToken
+ * 
+ */
+export type RefreshToken = Prisma.RefreshTokenModel
+/**
  * Model Startup
  * 
  */
 export type Startup = Prisma.StartupModel
+/**
+ * Model Analysis
+ * 
+ */
+export type Analysis = Prisma.AnalysisModel
+/**
+ * Model BusinessPlan
+ * 
+ */
+export type BusinessPlan = Prisma.BusinessPlanModel
+/**
+ * Model Persona
+ * 
+ */
+export type Persona = Prisma.PersonaModel
+/**
+ * Model PainPoint
+ * 
+ */
+export type PainPoint = Prisma.PainPointModel
+/**
+ * Model SwotItem
+ * 
+ */
+export type SwotItem = Prisma.SwotItemModel
+/**
+ * Model RevenueStream
+ * 
+ */
+export type RevenueStream = Prisma.RevenueStreamModel
+/**
+ * Model MarketReport
+ * 
+ */
+export type MarketReport = Prisma.MarketReportModel
+/**
+ * Model MarketKeyword
+ * 
+ */
+export type MarketKeyword = Prisma.MarketKeywordModel
+/**
+ * Model RedditSignal
+ * 
+ */
+export type RedditSignal = Prisma.RedditSignalModel
+/**
+ * Model HnSignal
+ * 
+ */
+export type HnSignal = Prisma.HnSignalModel
+/**
+ * Model MentorMessage
+ * 
+ */
+export type MentorMessage = Prisma.MentorMessageModel
+/**
+ * Model SchemaDesign
+ * 
+ */
+export type SchemaDesign = Prisma.SchemaDesignModel
+/**
+ * Model PitchDeck
+ * 
+ */
+export type PitchDeck = Prisma.PitchDeckModel
