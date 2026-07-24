@@ -3,6 +3,8 @@ import prisma from '../lib/prisma';
 import { requireAuth, AuthRequest } from '../middleware/auth';
 import { analyzeIdea } from '../services/analyzeIdea';
 import { generateBusinessPlan } from '../services/generateBusinessPlan';
+import { generateSchemaDesign } from '../services/generateSchemaDesign';
+import { schemaToMermaid } from '../services/schemaToMermaid';
 
 const router = Router();
 
@@ -109,6 +111,38 @@ router.post('/:id/business-plan', requireAuth, async (req: AuthRequest, res) => 
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to generate business plan' });
+  }
+});
+
+router.post('/:id/schema-design', requireAuth, async (req: AuthRequest, res) => {
+  const startupId = req.params.id as string;
+
+  const startup = await prisma.startup.findUnique({ where: { id: startupId } });
+
+  if (!startup) {
+    return res.status(404).json({ error: 'Startup not found' });
+  }
+
+  if (startup.userId !== req.userId) {
+    return res.status(403).json({ error: 'Not authorized to modify this startup' });
+  }
+
+  try {
+    const schemaResult = await generateSchemaDesign(startup.rawIdea);
+    const mermaidDiagram = schemaToMermaid(schemaResult);
+
+    const schemaDesign = await prisma.schemaDesign.create({
+      data: {
+        startupId: startup.id,
+        entitiesJson: schemaResult.entities,
+        relationsJson: schemaResult.relations,
+      },
+    });
+
+    res.status(201).json({ schemaDesign, mermaidDiagram });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to generate schema design' });
   }
 });
 
