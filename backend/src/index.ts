@@ -31,3 +31,5 @@ app.get('/test-db', async (req, res) => {
     res.status(500).json({ success: false, error: 'Database connection failed' });
   }
 });
+
+app.use('/generated-pdfs', express.static('generated-pdfs'));
