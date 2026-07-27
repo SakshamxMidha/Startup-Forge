@@ -8,6 +8,8 @@ import { schemaToMermaid } from '../services/schemaToMermaid';
 import { generatePitchDeckContent } from '../services/generatePitchDeckContent';
 import { renderPitchDeckHtml } from '../services/renderPitchDeckHtml';
 import { generatePitchDeckPdf } from '../services/generatePitchDeckPdf';
+import { searchHn } from '../services/hnApi';
+import { synthesizeMarketReport } from '../services/synthesizeMarketReport';
 
 const router = Router();
 
@@ -183,6 +185,73 @@ router.post('/:id/pitch-deck', requireAuth, async (req: AuthRequest, res) => {
     res.status(500).json({ error: 'Failed to generate pitch deck' });
   }
 });
+
+router.post('/:id/market-research', requireAuth, async (req: AuthRequest, res) => {
+  const startupId = req.params.id as string;
+
+  const startup = await prisma.startup.findUnique({
+    where: { id: startupId },
+    include: { marketReport: true },
+  });
+
+  if (!startup) {
+    return res.status(404).json({ error: 'Startup not found' });
+  }
+
+  if (startup.userId !== req.userId) {
+    return res.status(403).json({ error: 'Not authorized to modify this startup' });
+  }
+
+  const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+  if (startup.marketReport && startup.marketReport.cachedAt > twentyFourHoursAgo) {
+    const fullReport = await prisma.marketReport.findUnique({
+      where: { id: startup.marketReport.id },
+      include: { keywords: true, hnSignals: true },
+    });
+    return res.json({ marketReport: fullReport, cached: true });
+  }
+
+  try {
+    const hnResults = await searchHn(startup.rawIdea);
+    const synthesis = await synthesizeMarketReport(startup.rawIdea, hnResults);
+
+    if (startup.marketReport) {
+      await prisma.marketKeyword.deleteMany({ where: { marketReportId: startup.marketReport.id } });
+      await prisma.hnSignal.deleteMany({ where: { marketReportId: startup.marketReport.id } });
+      await prisma.marketReport.delete({ where: { id: startup.marketReport.id } });
+    }
+
+    const marketReport = await prisma.marketReport.create({
+      data: {
+        startupId: startup.id,
+        trendDirection: synthesis.trendDirection,
+        summary: synthesis.summary,
+        cachedAt: new Date(),
+        keywords: {
+          create: synthesis.keywords.map((keyword) => ({ keyword })),
+        },
+        hnSignals: {
+          create: hnResults.map((r) => ({
+            title: r.title,
+            points: r.points,
+            url: r.url,
+          })),
+        },
+      },
+      include: {
+        keywords: true,
+        hnSignals: true,
+      },
+    });
+
+    res.status(201).json({ marketReport, cached: false });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to generate market research' });
+  }
+});
+
 
 router.get('/', requireAuth, async (req: AuthRequest, res) => {
   const startups = await prisma.startup.findMany({
