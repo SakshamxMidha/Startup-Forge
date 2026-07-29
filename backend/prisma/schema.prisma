@@ -8,12 +8,17 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  email         String         @unique
-  passwordHash  String
-  createdAt     DateTime       @default(now())
-  startups      Startup[]
-  refreshTokens RefreshToken[]
+  id                        String         @id @default(uuid())
+  email                     String         @unique
+  passwordHash              String
+  emailVerified             Boolean        @default(false)
+  verificationCode          String?
+  verificationCodeExpiresAt DateTime?
+  resetCode                 String?
+  resetCodeExpiresAt        DateTime?
+  createdAt                 DateTime       @default(now())
+  startups                  Startup[]
+  refreshTokens             RefreshToken[]
 }
 
 model RefreshToken {

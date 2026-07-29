@@ -10,6 +10,9 @@ import { renderPitchDeckHtml } from '../services/renderPitchDeckHtml';
 import { generatePitchDeckPdf } from '../services/generatePitchDeckPdf';
 import { searchHn } from '../services/hnApi';
 import { synthesizeMarketReport } from '../services/synthesizeMarketReport';
+import { ingestStartupKnowledge } from '../services/ingestKnowledge';
+import { generateMentorReply } from '../services/mentorChat';
+
 
 const router = Router();
 
@@ -260,6 +263,94 @@ router.get('/', requireAuth, async (req: AuthRequest, res) => {
   });
 
   res.json({ startups });
+});
+
+router.post('/:id/ingest-knowledge', requireAuth, async (req: AuthRequest, res) => {
+  const startupId = req.params.id as string;
+
+  const startup = await prisma.startup.findUnique({ where: { id: startupId } });
+
+  if (!startup) {
+    return res.status(404).json({ error: 'Startup not found' });
+  }
+
+  if (startup.userId !== req.userId) {
+    return res.status(403).json({ error: 'Not authorized to modify this startup' });
+  }
+
+  try {
+    const chunkCount = await ingestStartupKnowledge(startupId);
+    res.json({ success: true, chunksCreated: chunkCount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to ingest knowledge' });
+  }
+});
+
+router.post('/:id/mentor/chat', requireAuth, async (req: AuthRequest, res) => {
+  const startupId = req.params.id as string;
+  const { message } = req.body;
+
+  if (!message || typeof message !== 'string') {
+    return res.status(400).json({ error: 'message is required' });
+  }
+
+  const startup = await prisma.startup.findUnique({ where: { id: startupId } });
+
+  if (!startup) {
+    return res.status(404).json({ error: 'Startup not found' });
+  }
+
+  if (startup.userId !== req.userId) {
+    return res.status(403).json({ error: 'Not authorized to access this startup' });
+  }
+
+  try {
+    const pastMessages = await prisma.mentorMessage.findMany({
+      where: { startupId },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    const { reply, usedChunks } = await generateMentorReply(
+      startupId,
+      message,
+      pastMessages.map((m) => ({ role: m.role, content: m.content }))
+    );
+
+    await prisma.mentorMessage.create({
+      data: { startupId, role: 'user', content: message },
+    });
+
+    const assistantMessage = await prisma.mentorMessage.create({
+      data: { startupId, role: 'assistant', content: reply },
+    });
+
+    res.status(201).json({ message: assistantMessage, usedChunks });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to generate mentor reply' });
+  }
+});
+
+router.get('/:id/mentor/history', requireAuth, async (req: AuthRequest, res) => {
+  const startupId = req.params.id as string;
+
+  const startup = await prisma.startup.findUnique({ where: { id: startupId } });
+
+  if (!startup) {
+    return res.status(404).json({ error: 'Startup not found' });
+  }
+
+  if (startup.userId !== req.userId) {
+    return res.status(403).json({ error: 'Not authorized to access this startup' });
+  }
+
+  const messages = await prisma.mentorMessage.findMany({
+    where: { startupId },
+    orderBy: { createdAt: 'asc' },
+  });
+
+  res.json({ messages });
 });
 
 export default router;

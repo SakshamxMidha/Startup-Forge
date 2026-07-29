@@ -4,13 +4,16 @@ import prisma from './lib/prisma';
 import authRouter from './routes/auth';
 import meRouter from './routes/me';
 import startupsRouter from './routes/startups';
+import { embedText } from './services/embeddings';
+import { llmLimiter } from './middleware/rateLimiter';
+
 
 const app = express();
 app.use(express.json());
 
 app.use('/auth', authRouter);
 app.use('/', meRouter);
-app.use('/startups', startupsRouter);
+app.use('/startups', llmLimiter, startupsRouter);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
@@ -31,5 +34,4 @@ app.get('/test-db', async (req, res) => {
     res.status(500).json({ success: false, error: 'Database connection failed' });
   }
 });
-
 app.use('/generated-pdfs', express.static('generated-pdfs'));
