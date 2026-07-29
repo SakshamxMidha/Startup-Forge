@@ -4,7 +4,7 @@ import prisma from '../lib/prisma';
 import { signAccessToken, signRefreshToken, hashToken, verifyToken } from '../lib/jwt';
 import { authLimiter } from '../middleware/rateLimiter';
 import crypto from 'crypto';
-import { sendVerificationEmail } from '../services/email';
+import { sendVerificationEmail, sendPasswordResetEmail } from '../services/email';
 
 const router = Router();
 
@@ -160,6 +160,70 @@ router.post('/verify-email', async (req, res) => {
 
   const tokens = await issueTokens(user.id);
   res.json({ message: 'Email verified successfully', ...tokens });
+});
+
+router.post('/forgot-password', authLimiter, async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: 'Email required' });
+  }
+
+  const user = await prisma.user.findUnique({ where: { email } });
+
+  if (user) {
+    const resetCode = crypto.randomInt(100000, 999999).toString();
+    const resetCodeExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { resetCode, resetCodeExpiresAt },
+    });
+
+    try {
+      await sendPasswordResetEmail(email, resetCode);
+    } catch (error) {
+      console.error('Failed to send password reset email:', error);
+    }
+  }
+
+  res.json({ message: 'If an account exists for this email, a reset code has been sent.' });
+});
+
+router.post('/reset-password', authLimiter, async (req, res) => {
+  const { email, code, newPassword } = req.body;
+
+  if (!email || !code || !newPassword) {
+    return res.status(400).json({ error: 'Email, code, and new password are required' });
+  }
+
+  const user = await prisma.user.findUnique({ where: { email } });
+
+  if (!user || !user.resetCode || !user.resetCodeExpiresAt) {
+    return res.status(400).json({ error: 'No pending reset for this email' });
+  }
+
+  if (user.resetCodeExpiresAt < new Date()) {
+    return res.status(400).json({ error: 'Reset code expired' });
+  }
+
+  if (user.resetCode !== code) {
+    return res.status(400).json({ error: 'Invalid reset code' });
+  }
+
+  const passwordHash = await bcrypt.hash(newPassword, 10);
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { passwordHash, resetCode: null, resetCodeExpiresAt: null },
+  });
+
+  await prisma.refreshToken.updateMany({
+    where: { userId: user.id, revoked: false },
+    data: { revoked: true },
+  });
+
+  res.json({ message: 'Password reset successfully. Please log in with your new password.' });
 });
 
 export default router;
