@@ -47,23 +47,37 @@ router.post('/', requireAuth, async (req: AuthRequest, res) => {
   }
 });
 
-router.get('/:id', requireAuth, async (req: AuthRequest, res) => {
+router.post('/:id/pitch-deck', requireAuth, async (req: AuthRequest, res) => {
   const startupId = req.params.id as string;
 
-  const startup = await prisma.startup.findUnique({
-    where: { id: startupId },
-    include: { analysis: true },
-  });
+  const startup = await prisma.startup.findUnique({ where: { id: startupId } });
 
   if (!startup) {
     return res.status(404).json({ error: 'Startup not found' });
   }
 
   if (startup.userId !== req.userId) {
-    return res.status(403).json({ error: 'Not authorized to view this startup' });
+    return res.status(403).json({ error: 'Not authorized to modify this startup' });
   }
 
-  res.json({ startup });
+  try {
+    const content = await generatePitchDeckContent(startup.rawIdea);
+    const html = renderPitchDeckHtml(content);
+    const filename = `pitch-${startup.id}.pdf`;
+    const pdfUrl = await generatePitchDeckPdf(html, filename);
+
+    const pitchDeck = await prisma.pitchDeck.create({
+      data: {
+        startupId: startup.id,
+        pdfUrl,
+      },
+    });
+
+    res.status(201).json({ pitchDeck });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to generate pitch deck' });
+  }
 });
 
 router.post('/:id/business-plan', requireAuth, async (req: AuthRequest, res) => {
