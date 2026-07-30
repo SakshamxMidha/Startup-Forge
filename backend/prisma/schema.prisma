@@ -19,6 +19,7 @@ model User {
   createdAt                 DateTime       @default(now())
   startups                  Startup[]
   refreshTokens             RefreshToken[]
+  usageLogs UsageLog[]
 }
 
 model RefreshToken {
@@ -182,4 +183,15 @@ model PitchDeck {
   startup     Startup  @relation(fields: [startupId], references: [id])
   pdfUrl      String
   generatedAt DateTime @default(now())
+}
+
+model UsageLog {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  endpoint     String
+  promptTokens Int
+  outputTokens Int
+  totalTokens  Int
+  createdAt    DateTime @default(now())
 }

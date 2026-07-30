@@ -32,7 +32,7 @@ const BusinessPlanSchema = z.object({
 
 export type BusinessPlanResult = z.infer<typeof BusinessPlanSchema>;
 
-export async function generateBusinessPlan(rawIdea: string): Promise<BusinessPlanResult> {
+export async function generateBusinessPlan(rawIdea: string) {
   const prompt = `You are a startup strategist creating a full business plan.
 
 Business idea: "${rawIdea}"
@@ -75,6 +75,7 @@ Example output shape (for a meal-kit delivery idea):
 
 Return your business plan for the actual idea given above, in the same JSON shape.`;
 
-  const rawResult = await generateJSON<unknown>(prompt);
-  return BusinessPlanSchema.parse(rawResult);
+  const { result: rawResult, usage } = await generateJSON<unknown>(prompt);
+  const result = BusinessPlanSchema.parse(rawResult);
+  return { result, usage };
 }

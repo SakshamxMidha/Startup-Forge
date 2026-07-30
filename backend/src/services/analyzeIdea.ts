@@ -13,7 +13,7 @@ const AnalysisSchema = z.object({
 
 export type AnalysisResult = z.infer<typeof AnalysisSchema>;
 
-export async function analyzeIdea(rawIdea: string): Promise<AnalysisResult> {
+export async function analyzeIdea(rawIdea: string) {
   const prompt = `You are an experienced startup advisor analyzing a business idea.
 
 Analyze this startup idea: "${rawIdea}"
@@ -42,6 +42,7 @@ Example output for "a subscription box for artisanal coffee beans":
 
 Return your analysis for the actual idea given above, in the same JSON shape.`;
 
-  const rawResult = await generateJSON<unknown>(prompt);
-  return AnalysisSchema.parse(rawResult);
+  const { result: rawResult, usage } = await generateJSON<unknown>(prompt);
+  const result = AnalysisSchema.parse(rawResult);
+  return { result, usage };
 }

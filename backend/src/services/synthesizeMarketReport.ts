@@ -10,10 +10,7 @@ const MarketSynthesisSchema = z.object({
 
 export type MarketSynthesisResult = z.infer<typeof MarketSynthesisSchema>;
 
-export async function synthesizeMarketReport(
-  rawIdea: string,
-  hnResults: HnResult[]
-): Promise<MarketSynthesisResult> {
+export async function synthesizeMarketReport(rawIdea: string, hnResults: HnResult[]) {
   const hnContext =
     hnResults.length > 0
       ? hnResults.map((r) => `- "${r.title}" (${r.points} points)`).join('\n')
@@ -40,6 +37,7 @@ Return your synthesis in the same JSON shape as this example:
   "keywords": ["subscription box", "artisanal food", "direct-to-consumer", "niche e-commerce"]
 }`;
 
-  const rawResult = await generateJSON<unknown>(prompt);
-  return MarketSynthesisSchema.parse(rawResult);
+  const { result: rawResult, usage } = await generateJSON<unknown>(prompt);
+  const result = MarketSynthesisSchema.parse(rawResult);
+  return { result, usage };
 }

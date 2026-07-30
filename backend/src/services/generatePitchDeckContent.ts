@@ -19,7 +19,7 @@ const PitchDeckContentSchema = z.object({
 
 export type PitchDeckContentResult = z.infer<typeof PitchDeckContentSchema>;
 
-export async function generatePitchDeckContent(rawIdea: string): Promise<PitchDeckContentResult> {
+export async function generatePitchDeckContent(rawIdea: string) {
   const prompt = `You are a top-tier startup pitch consultant who has helped companies raise millions. You write pitch decks that are punchy, concrete, and instantly understandable — never vague or jargon-heavy.
 
 Startup idea: "${rawIdea}"
@@ -78,6 +78,7 @@ Example output (for a meal-kit delivery idea) showing the level of specificity e
 
 Return your pitch deck content for the actual idea given above, in the same JSON shape, matching this level of specificity.`;
 
-  const rawResult = await generateJSON<unknown>(prompt);
-  return PitchDeckContentSchema.parse(rawResult);
+  const { result: rawResult, usage } = await generateJSON<unknown>(prompt);
+  const result = PitchDeckContentSchema.parse(rawResult);
+  return { result, usage };
 }

@@ -12,7 +12,7 @@ import { searchHn } from '../services/hnApi';
 import { synthesizeMarketReport } from '../services/synthesizeMarketReport';
 import { ingestStartupKnowledge } from '../services/ingestKnowledge';
 import { generateMentorReply } from '../services/mentorChat';
-
+import { logUsage } from '../services/usageLog';
 
 const router = Router();
 
@@ -31,7 +31,8 @@ router.post('/', requireAuth, async (req: AuthRequest, res) => {
       },
     });
 
-    const analysisResult = await analyzeIdea(rawIdea);
+    const { result: analysisResult, usage } = await analyzeIdea(rawIdea);
+    await logUsage(req.userId as string, 'POST /startups', usage);
 
     const analysis = await prisma.analysis.create({
       data: {
@@ -47,37 +48,23 @@ router.post('/', requireAuth, async (req: AuthRequest, res) => {
   }
 });
 
-router.post('/:id/pitch-deck', requireAuth, async (req: AuthRequest, res) => {
+router.get('/:id', requireAuth, async (req: AuthRequest, res) => {
   const startupId = req.params.id as string;
 
-  const startup = await prisma.startup.findUnique({ where: { id: startupId } });
+  const startup = await prisma.startup.findUnique({
+    where: { id: startupId },
+    include: { analysis: true },
+  });
 
   if (!startup) {
     return res.status(404).json({ error: 'Startup not found' });
   }
 
   if (startup.userId !== req.userId) {
-    return res.status(403).json({ error: 'Not authorized to modify this startup' });
+    return res.status(403).json({ error: 'Not authorized to view this startup' });
   }
 
-  try {
-    const content = await generatePitchDeckContent(startup.rawIdea);
-    const html = renderPitchDeckHtml(content);
-    const filename = `pitch-${startup.id}.pdf`;
-    const pdfUrl = await generatePitchDeckPdf(html, filename);
-
-    const pitchDeck = await prisma.pitchDeck.create({
-      data: {
-        startupId: startup.id,
-        pdfUrl,
-      },
-    });
-
-    res.status(201).json({ pitchDeck });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to generate pitch deck' });
-  }
+  res.json({ startup });
 });
 
 router.post('/:id/business-plan', requireAuth, async (req: AuthRequest, res) => {
@@ -94,7 +81,8 @@ router.post('/:id/business-plan', requireAuth, async (req: AuthRequest, res) => 
   }
 
   try {
-    const planResult = await generateBusinessPlan(startup.rawIdea);
+    const { result: planResult, usage } = await generateBusinessPlan(startup.rawIdea);
+    await logUsage(req.userId as string, 'POST /startups/:id/business-plan', usage);
 
     const businessPlan = await prisma.businessPlan.create({
       data: {
@@ -150,7 +138,9 @@ router.post('/:id/schema-design', requireAuth, async (req: AuthRequest, res) => 
   }
 
   try {
-    const schemaResult = await generateSchemaDesign(startup.rawIdea);
+    const { result: schemaResult, usage } = await generateSchemaDesign(startup.rawIdea);
+    await logUsage(req.userId as string, 'POST /startups/:id/schema-design', usage);
+
     const mermaidDiagram = schemaToMermaid(schemaResult);
 
     const schemaDesign = await prisma.schemaDesign.create({
@@ -182,12 +172,12 @@ router.post('/:id/pitch-deck', requireAuth, async (req: AuthRequest, res) => {
   }
 
   try {
-    const content = await generatePitchDeckContent(startup.rawIdea);
+    const { result: content, usage } = await generatePitchDeckContent(startup.rawIdea);
+    await logUsage(req.userId as string, 'POST /startups/:id/pitch-deck', usage);
+
     const html = renderPitchDeckHtml(content);
     const filename = `pitch-${startup.id}.pdf`;
-    await generatePitchDeckPdf(html, filename);
-
-    const pdfUrl = `/generated-pdfs/${filename}`;
+    const pdfUrl = await generatePitchDeckPdf(html, filename);
 
     const pitchDeck = await prisma.pitchDeck.create({
       data: {
@@ -231,7 +221,8 @@ router.post('/:id/market-research', requireAuth, async (req: AuthRequest, res) =
 
   try {
     const hnResults = await searchHn(startup.rawIdea);
-    const synthesis = await synthesizeMarketReport(startup.rawIdea, hnResults);
+    const { result: synthesis, usage } = await synthesizeMarketReport(startup.rawIdea, hnResults);
+    await logUsage(req.userId as string, 'POST /startups/:id/market-research', usage);
 
     if (startup.marketReport) {
       await prisma.marketKeyword.deleteMany({ where: { marketReportId: startup.marketReport.id } });
@@ -268,7 +259,6 @@ router.post('/:id/market-research', requireAuth, async (req: AuthRequest, res) =
     res.status(500).json({ error: 'Failed to generate market research' });
   }
 });
-
 
 router.get('/', requireAuth, async (req: AuthRequest, res) => {
   const startups = await prisma.startup.findMany({

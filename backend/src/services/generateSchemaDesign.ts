@@ -24,7 +24,7 @@ const SchemaDesignSchema = z.object({
 
 export type SchemaDesignResult = z.infer<typeof SchemaDesignSchema>;
 
-export async function generateSchemaDesign(rawIdea: string): Promise<SchemaDesignResult> {
+export async function generateSchemaDesign(rawIdea: string) {
   const prompt = `You are a database architect designing a schema for a new application.
 
 Application idea: "${rawIdea}"
@@ -50,6 +50,7 @@ Example output (for a simple blog platform):
 
 Return your schema design for the actual idea given above, in the same JSON shape.`;
 
-  const rawResult = await generateJSON<unknown>(prompt);
-  return SchemaDesignSchema.parse(rawResult);
+  const { result: rawResult, usage } = await generateJSON<unknown>(prompt);
+  const result = SchemaDesignSchema.parse(rawResult);
+  return { result, usage };
 }

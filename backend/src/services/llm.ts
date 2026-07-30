@@ -9,13 +9,27 @@ const model = genAI.getGenerativeModel({
   },
 });
 
-export async function generateJSON<T>(prompt: string): Promise<T> {
+export interface GenerationUsage {
+  promptTokens: number;
+  outputTokens: number;
+  totalTokens: number;
+}
+
+export async function generateJSON<T>(
+  prompt: string
+): Promise<{ result: T; usage: GenerationUsage }> {
   const fullPrompt = `${prompt}
 
 CRITICAL: Respond with ONLY valid JSON. No markdown code fences, no explanatory text before or after, no comments. Just the raw JSON object or array.`;
 
   const result = await model.generateContent(fullPrompt);
   const rawText = result.response.text();
+
+  const usage: GenerationUsage = {
+    promptTokens: result.response.usageMetadata?.promptTokenCount ?? 0,
+    outputTokens: result.response.usageMetadata?.candidatesTokenCount ?? 0,
+    totalTokens: result.response.usageMetadata?.totalTokenCount ?? 0,
+  };
 
   const cleaned = rawText
     .trim()
@@ -25,7 +39,7 @@ CRITICAL: Respond with ONLY valid JSON. No markdown code fences, no explanatory 
     .trim();
 
   try {
-    return JSON.parse(cleaned) as T;
+    return { result: JSON.parse(cleaned) as T, usage };
   } catch (error) {
     throw new Error(`Gemini returned invalid JSON: ${cleaned.slice(0, 200)}`);
   }
