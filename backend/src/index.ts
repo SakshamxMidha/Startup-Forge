@@ -1,19 +1,19 @@
 import 'dotenv/config';
 import express from 'express';
+import cors from 'cors';
 import prisma from './lib/prisma';
 import authRouter from './routes/auth';
 import meRouter from './routes/me';
 import startupsRouter from './routes/startups';
 import { embedText } from './services/embeddings';
-import { llmLimiter } from './middleware/rateLimiter';
-
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 app.use('/auth', authRouter);
 app.use('/', meRouter);
-app.use('/startups', llmLimiter, startupsRouter);
+app.use('/startups', startupsRouter);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });

@@ -84,6 +84,9 @@ router.post('/:id/business-plan', requireAuth, async (req: AuthRequest, res) => 
     const { result: planResult, usage } = await generateBusinessPlan(startup.rawIdea);
     await logUsage(req.userId as string, 'POST /startups/:id/business-plan', usage);
 
+    // Allow regeneration: remove any existing plan first (cascades to persona/swot/revenue).
+    await prisma.businessPlan.deleteMany({ where: { startupId: startup.id } });
+
     const businessPlan = await prisma.businessPlan.create({
       data: {
         startupId: startup.id,
@@ -124,6 +127,109 @@ router.post('/:id/business-plan', requireAuth, async (req: AuthRequest, res) => 
   }
 });
 
+router.get('/:id/business-plan', requireAuth, async (req: AuthRequest, res) => {
+  const startupId = req.params.id as string;
+
+  const startup = await prisma.startup.findUnique({ where: { id: startupId } });
+
+  if (!startup) {
+    return res.status(404).json({ error: 'Startup not found' });
+  }
+
+  if (startup.userId !== req.userId) {
+    return res.status(403).json({ error: 'Not authorized to view this startup' });
+  }
+
+  const businessPlan = await prisma.businessPlan.findUnique({
+    where: { startupId: startup.id },
+    include: {
+      persona: { include: { painPoints: true } },
+      swotItems: true,
+      revenueStreams: true,
+    },
+  });
+
+  if (!businessPlan) {
+    return res.status(404).json({ error: 'No business plan generated yet' });
+  }
+
+  res.json({ businessPlan });
+});
+
+router.get('/:id/schema-design', requireAuth, async (req: AuthRequest, res) => {
+  const startupId = req.params.id as string;
+
+  const startup = await prisma.startup.findUnique({ where: { id: startupId } });
+
+  if (!startup) {
+    return res.status(404).json({ error: 'Startup not found' });
+  }
+
+  if (startup.userId !== req.userId) {
+    return res.status(403).json({ error: 'Not authorized to view this startup' });
+  }
+
+  const schemaDesign = await prisma.schemaDesign.findUnique({ where: { startupId: startup.id } });
+
+  if (!schemaDesign) {
+    return res.status(404).json({ error: 'No schema design generated yet' });
+  }
+
+  const mermaidDiagram = schemaToMermaid({
+    entities: schemaDesign.entitiesJson as any,
+    relations: schemaDesign.relationsJson as any,
+  });
+
+  res.json({ schemaDesign, mermaidDiagram });
+});
+
+router.get('/:id/pitch-deck', requireAuth, async (req: AuthRequest, res) => {
+  const startupId = req.params.id as string;
+
+  const startup = await prisma.startup.findUnique({ where: { id: startupId } });
+
+  if (!startup) {
+    return res.status(404).json({ error: 'Startup not found' });
+  }
+
+  if (startup.userId !== req.userId) {
+    return res.status(403).json({ error: 'Not authorized to view this startup' });
+  }
+
+  const pitchDeck = await prisma.pitchDeck.findUnique({ where: { startupId: startup.id } });
+
+  if (!pitchDeck) {
+    return res.status(404).json({ error: 'No pitch deck generated yet' });
+  }
+
+  res.json({ pitchDeck });
+});
+
+router.get('/:id/market-research', requireAuth, async (req: AuthRequest, res) => {
+  const startupId = req.params.id as string;
+
+  const startup = await prisma.startup.findUnique({ where: { id: startupId } });
+
+  if (!startup) {
+    return res.status(404).json({ error: 'Startup not found' });
+  }
+
+  if (startup.userId !== req.userId) {
+    return res.status(403).json({ error: 'Not authorized to view this startup' });
+  }
+
+  const marketReport = await prisma.marketReport.findUnique({
+    where: { startupId: startup.id },
+    include: { keywords: true, hnSignals: true },
+  });
+
+  if (!marketReport) {
+    return res.status(404).json({ error: 'No market research generated yet' });
+  }
+
+  res.json({ marketReport, cached: true });
+});
+
 router.post('/:id/schema-design', requireAuth, async (req: AuthRequest, res) => {
   const startupId = req.params.id as string;
 
@@ -142,6 +248,8 @@ router.post('/:id/schema-design', requireAuth, async (req: AuthRequest, res) => 
     await logUsage(req.userId as string, 'POST /startups/:id/schema-design', usage);
 
     const mermaidDiagram = schemaToMermaid(schemaResult);
+
+    await prisma.schemaDesign.deleteMany({ where: { startupId: startup.id } });
 
     const schemaDesign = await prisma.schemaDesign.create({
       data: {
@@ -178,6 +286,8 @@ router.post('/:id/pitch-deck', requireAuth, async (req: AuthRequest, res) => {
     const html = renderPitchDeckHtml(content);
     const filename = `pitch-${startup.id}.pdf`;
     const pdfUrl = await generatePitchDeckPdf(html, filename);
+
+    await prisma.pitchDeck.deleteMany({ where: { startupId: startup.id } });
 
     const pitchDeck = await prisma.pitchDeck.create({
       data: {
@@ -263,10 +373,32 @@ router.post('/:id/market-research', requireAuth, async (req: AuthRequest, res) =
 router.get('/', requireAuth, async (req: AuthRequest, res) => {
   const startups = await prisma.startup.findMany({
     where: { userId: req.userId },
-    include: { analysis: true },
+    include: {
+      analysis: true,
+      businessPlan: { select: { id: true } },
+      marketReport: { select: { id: true } },
+      schemaDesign: { select: { id: true } },
+      pitchDeck: { select: { id: true } },
+    },
+    orderBy: { updatedAt: 'desc' },
   });
 
-  res.json({ startups });
+  const startupsWithProgress = startups.map((startup) => ({
+    id: startup.id,
+    rawIdea: startup.rawIdea,
+    createdAt: startup.createdAt,
+    updatedAt: startup.updatedAt,
+    analysis: startup.analysis,
+    progress: {
+      analysis: !!startup.analysis,
+      businessPlan: !!startup.businessPlan,
+      marketResearch: !!startup.marketReport,
+      schemaDesign: !!startup.schemaDesign,
+      pitchDeck: !!startup.pitchDeck,
+    },
+  }));
+
+  res.json({ startups: startupsWithProgress });
 });
 
 router.post('/:id/ingest-knowledge', requireAuth, async (req: AuthRequest, res) => {
@@ -317,9 +449,10 @@ router.post('/:id/mentor/chat', requireAuth, async (req: AuthRequest, res) => {
 
     const { reply, usedChunks } = await generateMentorReply(
       startupId,
+      startup.rawIdea,
       message,
       pastMessages.map((m) => ({ role: m.role, content: m.content }))
-    );
+    );    
 
     await prisma.mentorMessage.create({
       data: { startupId, role: 'user', content: message },

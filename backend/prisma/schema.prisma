@@ -80,7 +80,7 @@ model BusinessPlan {
 model Persona {
   id             String       @id @default(uuid())
   businessPlanId String       @unique
-  businessPlan   BusinessPlan @relation(fields: [businessPlanId], references: [id])
+  businessPlan   BusinessPlan @relation(fields: [businessPlanId], references: [id], onDelete: Cascade)
   name           String
   ageRange       String
   behavior       String
@@ -90,7 +90,7 @@ model Persona {
 model PainPoint {
   id        String  @id @default(uuid())
   personaId String
-  persona   Persona @relation(fields: [personaId], references: [id])
+  persona   Persona @relation(fields: [personaId], references: [id], onDelete: Cascade)
   text      String
 }
 
@@ -104,7 +104,7 @@ enum SwotCategory {
 model SwotItem {
   id             String       @id @default(uuid())
   businessPlanId String
-  businessPlan   BusinessPlan @relation(fields: [businessPlanId], references: [id])
+  businessPlan   BusinessPlan @relation(fields: [businessPlanId], references: [id], onDelete: Cascade)
   category       SwotCategory
   text           String
 }
@@ -112,7 +112,7 @@ model SwotItem {
 model RevenueStream {
   id             String       @id @default(uuid())
   businessPlanId String
-  businessPlan   BusinessPlan @relation(fields: [businessPlanId], references: [id])
+  businessPlan   BusinessPlan @relation(fields: [businessPlanId], references: [id], onDelete: Cascade)
   name           String
   pricing        String
 }

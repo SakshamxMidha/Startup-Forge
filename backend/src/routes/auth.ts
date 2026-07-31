@@ -2,7 +2,6 @@ import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import prisma from '../lib/prisma';
 import { signAccessToken, signRefreshToken, hashToken, verifyToken } from '../lib/jwt';
-import { authLimiter } from '../middleware/rateLimiter';
 import crypto from 'crypto';
 import { sendVerificationEmail, sendPasswordResetEmail } from '../services/email';
 
@@ -25,7 +24,7 @@ async function issueTokens(userId: string) {
   return { accessToken, refreshToken };
 }
 
-router.post('/signup', authLimiter, async (req, res) => {
+router.post('/signup', async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -63,7 +62,7 @@ router.post('/signup', authLimiter, async (req, res) => {
   });
 });
 
-router.post('/login', authLimiter, async (req, res) => {
+router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -88,7 +87,7 @@ router.post('/login', authLimiter, async (req, res) => {
   res.json(tokens);
 });
 
-router.post('/refresh', authLimiter, async (req, res) => {
+router.post('/refresh', async (req, res) => {
   const { refreshToken } = req.body;
 
   if (!refreshToken) {
@@ -162,7 +161,7 @@ router.post('/verify-email', async (req, res) => {
   res.json({ message: 'Email verified successfully', ...tokens });
 });
 
-router.post('/forgot-password', authLimiter, async (req, res) => {
+router.post('/forgot-password', async (req, res) => {
   const { email } = req.body;
 
   if (!email) {
@@ -190,7 +189,7 @@ router.post('/forgot-password', authLimiter, async (req, res) => {
   res.json({ message: 'If an account exists for this email, a reset code has been sent.' });
 });
 
-router.post('/reset-password', authLimiter, async (req, res) => {
+router.post('/reset-password', async (req, res) => {
   const { email, code, newPassword } = req.body;
 
   if (!email || !code || !newPassword) {
@@ -226,4 +225,4 @@ router.post('/reset-password', authLimiter, async (req, res) => {
   res.json({ message: 'Password reset successfully. Please log in with your new password.' });
 });
 
-export default router;
+export default router;  

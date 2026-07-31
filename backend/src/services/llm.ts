@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { withGeminiErrorHandling } from './geminiError';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
 
@@ -22,7 +23,7 @@ export async function generateJSON<T>(
 
 CRITICAL: Respond with ONLY valid JSON. No markdown code fences, no explanatory text before or after, no comments. Just the raw JSON object or array.`;
 
-  const result = await model.generateContent(fullPrompt);
+  const result = await withGeminiErrorHandling(() => model.generateContent(fullPrompt));
   const rawText = result.response.text();
 
   const usage: GenerationUsage = {
