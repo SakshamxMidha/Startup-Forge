@@ -148,16 +148,18 @@ export default function StartupDetail() {
             <Skeleton className="h-4 w-1/3" />
           </div>
         ) : (
-          <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="relative">
-            <h1 className="text-2xl font-bold leading-snug pr-8">{startup.rawIdea}</h1>
-            <p className="text-sm text-fg-subtle mt-1">
-              Created {new Date(startup.createdAt).toLocaleDateString()}
-            </p>
+          <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="flex items-start gap-3">
             <Katana
-              animate
+              variant="hilt"
               glow
-              className="hidden sm:block absolute -right-8 -top-4 w-64 h-16 opacity-50 pointer-events-none select-none"
+              className="hidden sm:block w-9 h-9 shrink-0 mt-1 opacity-90 pointer-events-none select-none"
             />
+            <div>
+              <h1 className="text-2xl font-bold leading-snug">{startup.rawIdea}</h1>
+              <p className="text-sm text-fg-subtle mt-1">
+                Created {new Date(startup.createdAt).toLocaleDateString()}
+              </p>
+            </div>
           </motion.div>
         )}
 

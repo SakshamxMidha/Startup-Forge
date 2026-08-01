@@ -36,7 +36,10 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
         <span className="font-bold text-lg tracking-tight">StartupForge</span>
       </div>
-      <Katana glow className="w-32 h-8 mx-3 mb-6 opacity-55 pointer-events-none select-none" />
+      <div className="flex items-center gap-2 px-3 mb-6">
+        <Katana variant="hilt" glow className="w-7 h-7 shrink-0 opacity-80 pointer-events-none select-none" />
+        <div className="h-px flex-1 bg-gradient-to-r from-crimson/30 to-transparent" />
+      </div>
 
       <nav className="flex-1 space-y-1">
         {navItems.map(({ to, label, icon: Icon }) => (

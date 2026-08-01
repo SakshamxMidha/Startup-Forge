@@ -1,9 +1,13 @@
 // Reusable katana SVG. `animate` triggers the unsheath + shine draw.
 // `glow` adds a soft crimson drop-shadow so it reads as a deliberate accent (not a smudge) at low opacity or against a light background.
-export function Katana({ className = '', animate = false, glow = false }: { className?: string; animate?: boolean; glow?: boolean }) {
+// `variant="hilt"` crops to just the guard + handle (a squarer, icon-friendly crop) for small inline/sidebar use —
+// the full blade's 800:90 aspect ratio renders as an near-invisible sliver at icon sizes.
+export function Katana({ className = '', animate = false, glow = false, variant = 'full' }: {
+  className?: string; animate?: boolean; glow?: boolean; variant?: 'full' | 'hilt';
+}) {
   return (
     <svg
-      viewBox="0 0 800 90"
+      viewBox={variant === 'hilt' ? '26 16 154 60' : '0 0 800 90'}
       className={className}
       xmlns="http://www.w3.org/2000/svg"
       style={glow ? { filter: 'drop-shadow(0 0 5px rgb(var(--glow) / 0.6)) drop-shadow(0 0 14px rgb(var(--glow) / 0.35))' } : undefined}
