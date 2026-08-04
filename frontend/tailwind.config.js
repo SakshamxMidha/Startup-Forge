@@ -23,6 +23,7 @@ export default {
         crimson: {
           DEFAULT: 'rgb(var(--crimson) / <alpha-value>)',
           bright: 'rgb(var(--crimson-bright) / <alpha-value>)',
+          fill: 'rgb(var(--crimson-fill) / <alpha-value>)',
         },
         ember: 'rgb(var(--ember) / <alpha-value>)',
         gold: 'rgb(var(--gold) / <alpha-value>)',
@@ -45,12 +46,12 @@ export default {
       keyframes: {
         'gradient-move': { to: { backgroundPosition: '200% center' } },
         float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
-        breathe: { '0%,100%': { opacity: '0.7', transform: 'scale(1)' }, '50%': { opacity: '1', transform: 'scale(1.08)' } },
+        breathe: { '0%,100%': { opacity: '0.55', transform: 'scale(1)' }, '50%': { opacity: '1', transform: 'scale(1.18)' } },
       },
       animation: {
         'gradient-move': 'gradient-move 5s linear infinite',
         float: 'float 6s ease-in-out infinite',
-        breathe: 'breathe 8s ease-in-out infinite',
+        breathe: 'breathe 6s ease-in-out infinite',
       },
     },
   },

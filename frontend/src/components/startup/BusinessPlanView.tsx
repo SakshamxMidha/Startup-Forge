@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Target, Eye, Gem, Users, DollarSign, TrendingUp as Growth } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { revealUp as item, revealStagger as stagger, revealViewport } from '@/lib/motion';
 import type { BusinessPlan, SwotCategory } from '@/types/api';
 
 const swotTone: Record<SwotCategory, { tone: 'success' | 'danger' | 'gold' | 'warning'; label: string }> = {
@@ -11,12 +12,9 @@ const swotTone: Record<SwotCategory, { tone: 'success' | 'danger' | 'gold' | 'wa
   THREAT: { tone: 'warning', label: 'Threat' },
 };
 
-const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
-const item = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0 } };
-
 export function BusinessPlanView({ plan }: { plan: BusinessPlan }) {
   return (
-    <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-5">
+    <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={revealViewport} className="space-y-5">
       <div className="grid sm:grid-cols-2 gap-4">
         {[
           { icon: Target, title: 'Mission', text: plan.mission },
@@ -70,31 +68,35 @@ export function BusinessPlanView({ plan }: { plan: BusinessPlan }) {
 
       <motion.div variants={item}>
         <h3 className="font-semibold mb-3">SWOT Analysis</h3>
-        <div className="grid sm:grid-cols-2 gap-3">
+        <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={revealViewport} className="grid sm:grid-cols-2 gap-3">
           {plan.swotItems.map(s => (
-            <Card key={s.id} hover className="p-4">
-              <Badge tone={swotTone[s.category].tone} className="mb-2">{swotTone[s.category].label}</Badge>
-              <p className="text-sm text-fg-muted">{s.text}</p>
-            </Card>
+            <motion.div key={s.id} variants={item}>
+              <Card hover className="p-4">
+                <Badge tone={swotTone[s.category].tone} className="mb-2">{swotTone[s.category].label}</Badge>
+                <p className="text-sm text-fg-muted">{s.text}</p>
+              </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </motion.div>
 
       <motion.div variants={item}>
         <h3 className="font-semibold mb-3 flex items-center gap-2"><DollarSign className="w-4 h-4 text-success" /> Revenue Streams</h3>
-        <div className="space-y-2">
+        <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={revealViewport} className="space-y-2">
           {plan.revenueStreams.map(r => (
-            <Card key={r.id} hover className="p-4 flex items-center justify-between gap-4">
-              <span className="font-medium text-sm">{r.name}</span>
-              <span className="text-sm text-fg-muted text-right">{r.pricing}</span>
-            </Card>
+            <motion.div key={r.id} variants={item}>
+              <Card hover className="p-4 flex items-center justify-between gap-4">
+                <span className="font-medium text-sm">{r.name}</span>
+                <span className="text-sm text-fg-muted text-right">{r.pricing}</span>
+              </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </motion.div>
 
       <motion.div variants={item}>
         <h3 className="font-semibold mb-3 flex items-center gap-2"><Growth className="w-4 h-4 text-gold" /> Growth Strategy</h3>
-        <motion.ol variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.4 }} className="space-y-2">
+        <motion.ol variants={stagger} initial="hidden" whileInView="show" viewport={revealViewport} className="space-y-2">
           {plan.growthStrategy.map((g, i) => (
             <motion.li key={i} variants={item} className="flex gap-3 text-sm text-fg-muted">
               <span className="w-6 h-6 rounded-full bg-crimson/10 text-crimson flex items-center justify-center text-xs font-bold shrink-0">{i + 1}</span>

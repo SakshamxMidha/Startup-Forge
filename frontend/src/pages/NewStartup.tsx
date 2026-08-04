@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/Button';
 import { Katana } from '@/components/fx/Katana';
 import { startupsApi, extractError } from '@/lib/api';
+import { useAmbientMotion } from '@/hooks/useAmbientMotion';
 
 const examples = [
   'A subscription box for artisanal hot sauce',
@@ -26,6 +27,7 @@ const loadingSteps = [
 
 export default function NewStartup() {
   const navigate = useNavigate();
+  const ambient = useAmbientMotion();
   const [idea, setIdea] = useState('');
   const [loading, setLoading] = useState(false);
   const [stepIdx, setStepIdx] = useState(0);
@@ -62,7 +64,7 @@ export default function NewStartup() {
           className="flex justify-center mb-3"
         >
           <motion.div
-            animate={{ y: [0, -6, 0] }}
+            animate={ambient ? { y: [0, -6, 0] } : undefined}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
             className="w-56 opacity-60"
           >

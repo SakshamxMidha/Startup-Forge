@@ -14,6 +14,8 @@ import { Badge } from '@/components/ui/Badge';
 import { SkeletonCard, Skeleton } from '@/components/ui/Skeleton';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
+import { useAmbientMotion } from '@/hooks/useAmbientMotion';
+import { revealUp, revealStagger, revealViewport } from '@/lib/motion';
 import { startupsApi, extractError } from '@/lib/api';
 import type { StartupListItem, ModuleProgress } from '@/types/api';
 
@@ -32,6 +34,7 @@ function progressPct(p: ModuleProgress) {
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const ambient = useAmbientMotion();
   const [startups, setStartups] = useState<StartupListItem[] | null>(null);
 
   useEffect(() => {
@@ -69,18 +72,18 @@ export default function Dashboard() {
           ].map(({ label, value, icon: Icon, tone }, i) => (
             <motion.div
               key={label}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.07 }}
+              initial={{ opacity: 0, y: 44, scale: 0.94 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: i * 0.09, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
             >
               <Card hover className="group relative overflow-hidden p-5">
-                <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-crimson/0 group-hover:bg-crimson/20 blur-2xl transition-colors duration-500 pointer-events-none" />
+                <div className="absolute -top-10 -right-10 w-36 h-36 rounded-full bg-crimson/0 group-hover:bg-crimson/30 blur-2xl transition-colors duration-500 pointer-events-none" />
                 <motion.div
-                  animate={{ y: [0, -5, 0] }}
+                  animate={ambient ? { y: [0, -5, 0] } : undefined}
                   transition={{ duration: 4.5 + i * 0.3, repeat: Infinity, ease: 'easeInOut' }}
                   className={`relative w-9 h-9 rounded-lg flex items-center justify-center mb-3 ${tone}`}
                 >
-                  <Icon className="w-4.5 h-4.5 w-[18px] h-[18px]" />
+                  <Icon className="w-[18px] h-[18px]" />
                 </motion.div>
                 <div className="relative text-2xl font-bold">
                   {startups === null
@@ -113,14 +116,14 @@ export default function Dashboard() {
           />
         ) : (
           <motion.div
-            initial="hidden" animate="show"
-            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }}
+            initial="hidden" whileInView="show" viewport={revealViewport}
+            variants={revealStagger}
             className="grid sm:grid-cols-2 gap-4"
           >
             {startups.map((s) => {
               const pct = progressPct(s.progress);
               return (
-                <motion.div key={s.id} variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0 } }}>
+                <motion.div key={s.id} variants={revealUp}>
                   <Card
                     hover
                     onClick={() => navigate(`/startups/${s.id}`)}
@@ -128,7 +131,7 @@ export default function Dashboard() {
                   >
                     {/* sweep highlight + corner glow, on hover */}
                     <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-crimson to-transparent -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
-                    <div className="absolute -top-14 -right-14 w-40 h-40 rounded-full bg-crimson/0 group-hover:bg-crimson/15 blur-3xl transition-colors duration-500 pointer-events-none" />
+                    <div className="absolute -top-14 -right-14 w-48 h-48 rounded-full bg-crimson/0 group-hover:bg-crimson/25 blur-3xl transition-colors duration-500 pointer-events-none" />
                     {/* tsuba-style corner accent */}
                     <div className="absolute top-3.5 right-3.5 w-2 h-2 rotate-45 border border-crimson/30 group-hover:border-crimson group-hover:shadow-glow transition-all" />
 

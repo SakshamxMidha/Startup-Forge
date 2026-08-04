@@ -18,6 +18,7 @@ import { SchemaView } from '@/components/startup/SchemaView';
 import { PitchDeckView } from '@/components/startup/PitchDeckView';
 import { MentorChat } from '@/components/startup/MentorChat';
 import { startupsApi, extractError, isNotFound } from '@/lib/api';
+import { rewardReveal } from '@/lib/motion';
 import type { Startup, BusinessPlan, MarketReport, SchemaDesign, PitchDeck } from '@/types/api';
 
 type TabKey = 'analysis' | 'plan' | 'market' | 'schema' | 'deck' | 'mentor';
@@ -63,6 +64,12 @@ export default function StartupDetail() {
   const [startup, setStartup] = useState<Startup | null>(null);
   const [tab, setTab] = useState<TabKey>('analysis');
   const [generating, setGenerating] = useState<TabKey | null>(null);
+  // Bumped per-tab whenever a generate/regenerate call succeeds, so the freshly-generated
+  // result can be given its own key and replay the reward-reveal animation even when the
+  // tab itself doesn't change (e.g. clicking "Regenerate" while already on that tab).
+  const [genPulse, setGenPulse] = useState<Record<TabKey, number>>({
+    analysis: 0, plan: 0, market: 0, schema: 0, deck: 0, mentor: 0,
+  });
 
   const [planState, setPlanState] = useSavedModule<BusinessPlan>(id, tab === 'plan', startupsApi.getBusinessPlan);
   const [marketState, setMarketState] = useSavedModule<{ report: MarketReport; cached: boolean }>(
@@ -103,6 +110,7 @@ export default function StartupDetail() {
         setDeckState({ status: 'ready', data });
         toast.success('Pitch deck generated!');
       }
+      setGenPulse((p) => ({ ...p, [which]: p[which] + 1 }));
     } catch (err) {
       toast.error(extractError(err));
     } finally {
@@ -188,10 +196,10 @@ export default function StartupDetail() {
         <AnimatePresence mode="wait">
           <motion.div
             key={tab}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0, y: 24, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -16, scale: 0.98 }}
+            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
           >
             {tab === 'analysis' && (
               startup?.analysis
@@ -203,7 +211,9 @@ export default function StartupDetail() {
 
             {tab === 'plan' && (
               planState.status === 'ready' && planState.data
-                ? <>{regenerateBar('plan', 'Plan')}<BusinessPlanView plan={planState.data} /></>
+                ? <motion.div key={`plan-${genPulse.plan}`} variants={rewardReveal} initial="hidden" animate="show" className="rounded-2xl">
+                    {regenerateBar('plan', 'Plan')}<BusinessPlanView plan={planState.data} />
+                  </motion.div>
                 : planState.status === 'empty'
                   ? genButton('plan', 'Business Plan')
                   : loadingSpinner
@@ -211,12 +221,14 @@ export default function StartupDetail() {
 
             {tab === 'market' && (
               marketState.status === 'ready' && marketState.data
-                ? <MarketResearchView
-                    report={marketState.data.report}
-                    cached={marketState.data.cached}
-                    onRefresh={() => generate('market')}
-                    refreshing={generating === 'market'}
-                  />
+                ? <motion.div key={`market-${genPulse.market}`} variants={rewardReveal} initial="hidden" animate="show" className="rounded-2xl">
+                    <MarketResearchView
+                      report={marketState.data.report}
+                      cached={marketState.data.cached}
+                      onRefresh={() => generate('market')}
+                      refreshing={generating === 'market'}
+                    />
+                  </motion.div>
                 : marketState.status === 'empty'
                   ? genButton('market', 'Market Research')
                   : loadingSpinner
@@ -224,7 +236,9 @@ export default function StartupDetail() {
 
             {tab === 'schema' && (
               schemaState.status === 'ready' && schemaState.data
-                ? <>{regenerateBar('schema', 'Schema')}<SchemaView schema={schemaState.data.design} mermaidDiagram={schemaState.data.mermaid} /></>
+                ? <motion.div key={`schema-${genPulse.schema}`} variants={rewardReveal} initial="hidden" animate="show" className="rounded-2xl">
+                    {regenerateBar('schema', 'Schema')}<SchemaView schema={schemaState.data.design} mermaidDiagram={schemaState.data.mermaid} />
+                  </motion.div>
                 : schemaState.status === 'empty'
                   ? genButton('schema', 'Schema Design')
                   : loadingSpinner
@@ -232,7 +246,9 @@ export default function StartupDetail() {
 
             {tab === 'deck' && (
               deckState.status === 'ready' && deckState.data
-                ? <>{regenerateBar('deck', 'Deck')}<PitchDeckView deck={deckState.data} /></>
+                ? <motion.div key={`deck-${genPulse.deck}`} variants={rewardReveal} initial="hidden" animate="show" className="rounded-2xl">
+                    {regenerateBar('deck', 'Deck')}<PitchDeckView deck={deckState.data} />
+                  </motion.div>
                 : deckState.status === 'empty'
                   ? genButton('deck', 'Pitch Deck')
                   : loadingSpinner

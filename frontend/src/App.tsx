@@ -1,22 +1,22 @@
-import { lazy, Suspense, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { Loader2 } from 'lucide-react';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 
-const Landing = lazy(() => import('@/pages/Landing'));
-const Signup = lazy(() => import('@/pages/Signup'));
-const VerifyEmail = lazy(() => import('@/pages/VerifyEmail'));
-const Login = lazy(() => import('@/pages/Login'));
-const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'));
-const ResetPassword = lazy(() => import('@/pages/ResetPassword'));
-const Dashboard = lazy(() => import('@/pages/Dashboard'));
-const NewStartup = lazy(() => import('@/pages/NewStartup'));
-const StartupDetail = lazy(() => import('@/pages/StartupDetail'));
-const Analytics = lazy(() => import('@/pages/Analytics'));
-const Settings = lazy(() => import('@/pages/Settings'));
-const NotFound = lazy(() => import('@/pages/NotFound'));
+import Landing from '@/pages/Landing';
+import Signup from '@/pages/Signup';
+import VerifyEmail from '@/pages/VerifyEmail';
+import Login from '@/pages/Login';
+import ForgotPassword from '@/pages/ForgotPassword';
+import ResetPassword from '@/pages/ResetPassword';
+import Dashboard from '@/pages/Dashboard';
+import NewStartup from '@/pages/NewStartup';
+import StartupDetail from '@/pages/StartupDetail';
+import Analytics from '@/pages/Analytics';
+import Settings from '@/pages/Settings';
+import NotFound from '@/pages/NotFound';
 
 function FullScreenLoader() {
   return (
@@ -50,22 +50,20 @@ export default function App() {
               },
             }}
           />
-          <Suspense fallback={<FullScreenLoader />}>
-            <Routes>
-              <Route path="/" element={<Landing />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/verify-email" element={<VerifyEmail />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
-              <Route path="/startups/new" element={<Protected><NewStartup /></Protected>} />
-              <Route path="/startups/:id" element={<Protected><StartupDetail /></Protected>} />
-              <Route path="/analytics" element={<Protected><Analytics /></Protected>} />
-              <Route path="/settings" element={<Protected><Settings /></Protected>} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
+            <Route path="/startups/new" element={<Protected><NewStartup /></Protected>} />
+            <Route path="/startups/:id" element={<Protected><StartupDetail /></Protected>} />
+            <Route path="/analytics" element={<Protected><Analytics /></Protected>} />
+            <Route path="/settings" element={<Protected><Settings /></Protected>} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>

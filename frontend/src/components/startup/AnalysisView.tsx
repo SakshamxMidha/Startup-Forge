@@ -3,14 +3,12 @@ import { Clock, Swords, Quote } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { ScoreRing } from '@/components/ui/ScoreRing';
+import { revealUp as item, revealStagger as stagger, revealViewport } from '@/lib/motion';
 import type { Analysis } from '@/types/api';
-
-const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
-const item = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0 } };
 
 export function AnalysisView({ analysis }: { analysis: Analysis }) {
   return (
-    <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-5">
+    <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={revealViewport} className="space-y-5">
       <motion.div variants={item}>
         <Card hover className="p-6 relative overflow-hidden">
           <div className="pointer-events-none absolute -top-16 -right-16 w-48 h-48 rounded-full bg-crimson/10 blur-3xl" />

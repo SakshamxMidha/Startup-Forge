@@ -173,10 +173,26 @@ export interface SchemaDesign {
   generatedAt: string;
 }
 
+export interface PitchDeckSlide {
+  title: string;
+  bullets: string[];
+}
+
+export interface PitchDeckContent {
+  companyName: string;
+  tagline: string;
+  problemSlide: PitchDeckSlide;
+  solutionSlide: PitchDeckSlide;
+  marketSlide: PitchDeckSlide;
+  businessModelSlide: PitchDeckSlide;
+  competitionSlide: PitchDeckSlide;
+  askSlide: PitchDeckSlide;
+}
+
 export interface PitchDeck {
   id: string;
   startupId: string;
-  pdfUrl: string;
+  content: PitchDeckContent;
   generatedAt: string;
 }
 

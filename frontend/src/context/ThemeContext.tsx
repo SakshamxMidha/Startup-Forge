@@ -3,15 +3,15 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 type Theme = 'dark' | 'light';
 
 const ThemeContext = createContext<{ theme: Theme; toggle: () => void }>({
-  theme: 'light',
+  theme: 'dark',
   toggle: () => {},
 });
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
     const stored = localStorage.getItem('sf_theme');
-    // Default to LIGHT on first visit; only use dark if explicitly chosen before.
-    return stored === 'dark' ? 'dark' : 'light';
+    // Default to DARK on first visit; only use light if explicitly chosen before.
+    return stored === 'light' ? 'light' : 'dark';
   });
 
   useEffect(() => {

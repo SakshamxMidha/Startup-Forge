@@ -13,6 +13,8 @@ import { Badge } from '@/components/ui/Badge';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { useAmbientMotion } from '@/hooks/useAmbientMotion';
+import { revealUp, revealStagger, revealViewport } from '@/lib/motion';
 import { startupsApi, userApi, extractError } from '@/lib/api';
 import type { StartupListItem, UsageSummary, ModuleProgress } from '@/types/api';
 
@@ -39,6 +41,7 @@ function timeAgo(iso: string) {
 }
 
 export default function Analytics() {
+  const ambient = useAmbientMotion();
   const [startups, setStartups] = useState<StartupListItem[] | null>(null);
   const [usage, setUsage] = useState<UsageSummary | null>(null);
 
@@ -74,11 +77,11 @@ export default function Analytics() {
             { label: 'Fully complete', value: fullyComplete, icon: CheckCircle2, tone: 'text-success bg-success/10' },
             { label: 'Completion', value: completionRate, suffix: '%', icon: TrendingUp, tone: 'text-crimson-bright bg-crimson/10' },
           ].map(({ label, value, suffix, icon: Icon, tone }, i) => (
-            <motion.div key={label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}>
+            <motion.div key={label} initial={{ opacity: 0, y: 44, scale: 0.94 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: i * 0.09, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}>
               <Card hover className="group relative overflow-hidden p-5">
-                <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-crimson/0 group-hover:bg-crimson/20 blur-2xl transition-colors duration-500 pointer-events-none" />
+                <div className="absolute -top-10 -right-10 w-36 h-36 rounded-full bg-crimson/0 group-hover:bg-crimson/30 blur-2xl transition-colors duration-500 pointer-events-none" />
                 <motion.div
-                  animate={{ y: [0, -5, 0] }}
+                  animate={ambient ? { y: [0, -5, 0] } : undefined}
                   transition={{ duration: 4.5 + i * 0.3, repeat: Infinity, ease: 'easeInOut' }}
                   className={`relative w-9 h-9 rounded-lg flex items-center justify-center mb-3 ${tone}`}
                 >
@@ -113,15 +116,15 @@ export default function Analytics() {
                 <Rocket className="w-4 h-4 text-crimson" /> Furthest along
               </h3>
               <motion.div
-                initial="hidden" animate="show"
-                variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }}
+                initial="hidden" whileInView="show" viewport={revealViewport}
+                variants={revealStagger}
                 className="space-y-3"
               >
                 {ranked.slice(0, 5).map((s) => {
                   const done = progressCount(s.progress);
                   const pct = (done / 5) * 100;
                   return (
-                    <motion.div key={s.id} variants={{ hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0 } }}>
+                    <motion.div key={s.id} variants={revealUp}>
                       <Link to={`/startups/${s.id}`}>
                         <Card hover className="p-4 hover:border-crimson/40 transition-colors">
                           <div className="flex items-center justify-between gap-3 mb-2">
@@ -149,12 +152,12 @@ export default function Analytics() {
               {usage.recentLogs.length === 0 ? (
                 <Card className="p-5 text-sm text-fg-muted">No activity yet — generate a module to see it here.</Card>
               ) : (
-                <div className="space-y-2">
-                  {usage.recentLogs.slice(0, 8).map((log, i) => {
+                <motion.div initial="hidden" whileInView="show" viewport={revealViewport} variants={revealStagger} className="space-y-2">
+                  {usage.recentLogs.slice(0, 8).map((log) => {
                     const meta = actionLabel[log.endpoint] ?? { label: 'AI action', icon: MessagesSquare };
                     const Icon = meta.icon;
                     return (
-                      <motion.div key={log.id} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: Math.min(i * 0.05, 0.4) }}>
+                      <motion.div key={log.id} variants={revealUp}>
                         <Card hover className="p-3.5 flex items-center gap-3">
                           <div className="w-9 h-9 rounded-lg bg-crimson/10 text-crimson flex items-center justify-center shrink-0">
                             <Icon className="w-4 h-4" />
@@ -167,7 +170,7 @@ export default function Analytics() {
                       </motion.div>
                     );
                   })}
-                </div>
+                </motion.div>
               )}
             </div>
           </div>

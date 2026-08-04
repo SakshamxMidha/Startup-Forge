@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { Katana } from '@/components/fx/Katana';
+import { useAmbientMotion } from '@/hooks/useAmbientMotion';
 
 interface Props {
   icon: ReactNode;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export function EmptyState({ icon, title, description, action }: Props) {
+  const ambient = useAmbientMotion();
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -21,7 +23,7 @@ export function EmptyState({ icon, title, description, action }: Props) {
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-16 opacity-[0.07] pointer-events-none select-none"
       />
       <motion.div
-        animate={{ y: [0, -8, 0] }}
+        animate={ambient ? { y: [0, -8, 0] } : undefined}
         transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
         className="relative w-16 h-16 rounded-2xl bg-crimson/10 text-crimson flex items-center justify-center mb-5 shadow-glow"
       >

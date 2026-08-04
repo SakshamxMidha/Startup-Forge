@@ -5,7 +5,10 @@ export function AnimatedCounter({ value, className = '' }: { value: number; clas
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true });
   const mv = useMotionValue(0);
-  const spring = useSpring(mv, { stiffness: 90, damping: 24 });
+  // Slightly underdamped (rather than the original overdamped spring) so the count-up has a
+  // small energetic pop at the end instead of a flat linear tick-up — kept subtle since these
+  // KPI values are often single digits, where a big overshoot would just look like a glitch.
+  const spring = useSpring(mv, { stiffness: 110, damping: 18 });
 
   useEffect(() => {
     if (inView) mv.set(value);

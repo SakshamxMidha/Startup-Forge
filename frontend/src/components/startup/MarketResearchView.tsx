@@ -3,6 +3,7 @@ import { TrendingUp, TrendingDown, Minus, ExternalLink, Flame, RefreshCw } from 
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { revealUp as item, revealStagger as stagger, revealViewport } from '@/lib/motion';
 import type { MarketReport } from '@/types/api';
 
 const trendMeta = {
@@ -11,9 +12,6 @@ const trendMeta = {
   declining: { icon: TrendingDown, tone: 'danger' as const, label: 'Declining' },
 };
 
-const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
-const item = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0 } };
-
 export function MarketResearchView({ report, cached, onRefresh, refreshing }: {
   report: MarketReport; cached?: boolean; onRefresh?: () => void; refreshing?: boolean;
 }) {
@@ -21,7 +19,7 @@ export function MarketResearchView({ report, cached, onRefresh, refreshing }: {
   const TrendIcon = trend.icon;
 
   return (
-    <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-5">
+    <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={revealViewport} className="space-y-5">
       <motion.div variants={item} className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <Badge tone={trend.tone} className="text-sm px-3 py-1">
@@ -68,7 +66,7 @@ export function MarketResearchView({ report, cached, onRefresh, refreshing }: {
             No directly relevant HN discussions found — the summary above notes what that thin signal means for this idea.
           </Card>
         ) : (
-          <motion.div variants={stagger} className="space-y-2">
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={revealViewport} className="space-y-2">
             {report.hnSignals.map(h => (
               <motion.a key={h.id} variants={item} href={h.url} target="_blank" rel="noreferrer" className="block">
                 <Card hover className="p-4 flex items-center justify-between gap-3 mb-2">

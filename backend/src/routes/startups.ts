@@ -6,8 +6,6 @@ import { generateBusinessPlan } from '../services/generateBusinessPlan';
 import { generateSchemaDesign } from '../services/generateSchemaDesign';
 import { schemaToMermaid } from '../services/schemaToMermaid';
 import { generatePitchDeckContent } from '../services/generatePitchDeckContent';
-import { renderPitchDeckHtml } from '../services/renderPitchDeckHtml';
-import { generatePitchDeckPdf } from '../services/generatePitchDeckPdf';
 import { searchHn } from '../services/hnApi';
 import { synthesizeMarketReport } from '../services/synthesizeMarketReport';
 import { ingestStartupKnowledge } from '../services/ingestKnowledge';
@@ -283,16 +281,12 @@ router.post('/:id/pitch-deck', requireAuth, async (req: AuthRequest, res) => {
     const { result: content, usage } = await generatePitchDeckContent(startup.rawIdea);
     await logUsage(req.userId as string, 'POST /startups/:id/pitch-deck', usage);
 
-    const html = renderPitchDeckHtml(content);
-    const filename = `pitch-${startup.id}.pdf`;
-    const pdfUrl = await generatePitchDeckPdf(html, filename);
-
     await prisma.pitchDeck.deleteMany({ where: { startupId: startup.id } });
 
     const pitchDeck = await prisma.pitchDeck.create({
       data: {
         startupId: startup.id,
-        pdfUrl,
+        content,
       },
     });
 

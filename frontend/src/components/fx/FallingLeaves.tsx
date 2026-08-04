@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useTheme } from '@/context/ThemeContext';
+import { useAmbientMotion } from '@/hooks/useAmbientMotion';
 
 interface Leaf {
   id: number; left: number; size: number; color: string;
@@ -15,6 +16,7 @@ const COLORS_LIGHT = ['176 20 34', '110 14 24', '176 66 54', '190 26 40'];
 export function FallingLeaves({ density = 18, className = '' }: { density?: number; className?: string }) {
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
+  const ambient = useAmbientMotion();
   useEffect(() => setMounted(true), []);
 
   const colors = theme === 'light' ? COLORS_LIGHT : COLORS_DARK;
@@ -31,7 +33,7 @@ export function FallingLeaves({ density = 18, className = '' }: { density?: numb
       delay: Math.random() * 12,
     })), [density, colors]);
 
-  if (!mounted) return null;
+  if (!mounted || !ambient) return null;
 
   return (
     <div className={`pointer-events-none fixed inset-0 overflow-hidden z-0 ${className}`} aria-hidden>

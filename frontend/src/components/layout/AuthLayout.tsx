@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Sparkles, Brain, Zap, MessagesSquare } from 'lucide-react';
 import { FallingLeaves } from '@/components/fx/FallingLeaves';
 import { Katana } from '@/components/fx/Katana';
+import { useAmbientMotion } from '@/hooks/useAmbientMotion';
 
 const brandFeatures = [
   { icon: Brain, text: 'Instant scoring & validation' },
@@ -12,6 +13,7 @@ const brandFeatures = [
 ];
 
 export function AuthLayout({ children, title, subtitle }: { children: ReactNode; title: string; subtitle?: string }) {
+  const ambient = useAmbientMotion();
   return (
     <div className="min-h-screen grid lg:grid-cols-[1.1fr_0.9fr]">
       {/* Brand panel */}
@@ -25,7 +27,7 @@ export function AuthLayout({ children, title, subtitle }: { children: ReactNode;
             maskImage: 'radial-gradient(ellipse 100% 80% at 30% 50%, black, transparent 80%)',
             WebkitMaskImage: 'radial-gradient(ellipse 100% 80% at 30% 50%, black, transparent 80%)',
           }} />
-        <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+        <motion.div animate={ambient ? { y: [0, -8, 0] } : undefined} transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
           className="absolute bottom-[12%] -left-[6%] w-[120%] opacity-50 pointer-events-none">
           <Katana className="w-full" />
         </motion.div>
@@ -62,7 +64,7 @@ export function AuthLayout({ children, title, subtitle }: { children: ReactNode;
 
       {/* Form side */}
       <div className="relative flex items-center justify-center p-6 sm:p-10 bg-bg overflow-hidden">
-        <FallingLeaves density={8} />
+        <FallingLeaves density={12} />
         <motion.div
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}

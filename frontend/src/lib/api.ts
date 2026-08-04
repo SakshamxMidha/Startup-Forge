@@ -8,7 +8,8 @@ import type {
 } from '@/types/api';
 
 // In dev, Vite proxies /api → http://localhost:4000 (see vite.config.ts).
-// In production, set VITE_API_URL to the deployed backend origin.
+// In production, set VITE_API_URL to the deployed backend origin (e.g. the Render URL) with
+// NO "/api" suffix — backend routes are mounted at root (/auth, /me, /startups, etc.).
 const BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 const ACCESS_KEY = 'sf_access_token';

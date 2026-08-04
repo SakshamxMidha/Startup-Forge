@@ -9,11 +9,12 @@
   --bg-elev2: 32 18 22;
   --fg: 244 236 238;
   --fg-muted: 170 140 146;
-  --fg-subtle: 120 92 98;
+  --fg-subtle: 150 122 128; /* tuned to clear WCAG AA 4.5:1 against both --bg and --bg-elev */
   --border: 54 28 34;
   --border-soft: 40 22 27;
   --crimson: 225 29 46;
   --crimson-bright: 255 68 82;
+  --crimson-fill: 209 27 43; /* ~8% darker than --crimson; solid-fill surfaces (button bg, chat bubble) so white text clears AA 4.5:1 */
   --ember: 158 18 34;
   --gold: 230 110 96;
   --glow: 225 29 46;
@@ -36,11 +37,12 @@
   --bg-elev2: 250 242 243;
   --fg: 28 12 16;
   --fg-muted: 110 74 80;
-  --fg-subtle: 158 120 126;
+  --fg-subtle: 133 95 101; /* tuned to clear WCAG AA 4.5:1 against --bg */
   --border: 230 208 210;
   --border-soft: 238 222 224;
   --crimson: 194 24 40;
   --crimson-bright: 220 48 62;
+  --crimson-fill: 178 22 37; /* ~8% darker than --crimson; solid-fill surfaces (button bg, chat bubble) */
   --ember: 150 16 30;
   --gold: 200 90 78;
   --glow: 194 24 40;
@@ -97,3 +99,18 @@ body {
   background: linear-gradient(90deg, transparent, rgb(var(--fg) / 0.06), transparent);
 }
 @keyframes shimmer { 100% { transform: translateX(100%); } }
+
+/* Kill switch for CSS-driven ambient/decorative loops when the OS prefers reduced motion.
+   Framer Motion's JS-driven ambient loops (floating icons, etc.) are gated separately via
+   the shared useAmbientMotion() hook — this covers the plain-CSS ones (breathing glows,
+   gradient shimmer, pulse dot). Loading indicators (spinners, skeleton shimmer) are left
+   running — they communicate active status, not decoration. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-breathe,
+  .animate-float,
+  .animate-pulse,
+  .animate-gradient-move,
+  .gradient-text {
+    animation: none !important;
+  }
+}

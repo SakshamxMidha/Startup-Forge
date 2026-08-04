@@ -8,7 +8,23 @@ import startupsRouter from './routes/startups';
 import { embedText } from './services/embeddings';
 
 const app = express();
-app.use(cors());
+
+// FRONTEND_URL supports a comma-separated list (e.g. the deployed Cloudflare Pages URL
+// plus http://localhost:5173 for local dev). Left unset, we allow all origins so local
+// dev keeps working without extra setup — set it once the production frontend URL is known.
+const allowedOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(',').map((origin) => origin.trim())
+  : null;
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!allowedOrigins || !origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+}));
 app.use(express.json());
 
 app.use('/auth', authRouter);
@@ -19,7 +35,7 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

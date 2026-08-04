@@ -2,12 +2,14 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Compass } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { useAmbientMotion } from '@/hooks/useAmbientMotion';
 
 export default function NotFound() {
+  const ambient = useAmbientMotion();
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
       <motion.div
-        animate={{ rotate: [0, 8, -8, 0] }}
+        animate={ambient ? { rotate: [0, 8, -8, 0] } : undefined}
         transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
         className="w-20 h-20 rounded-3xl bg-crimson/10 text-crimson flex items-center justify-center mb-6"
       >

@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs" // default is ESM (uses import.meta.url), which breaks under tsc's CommonJS output
 }
 
 datasource db {
@@ -181,7 +182,7 @@ model PitchDeck {
   id          String   @id @default(uuid())
   startupId   String   @unique
   startup     Startup  @relation(fields: [startupId], references: [id])
-  pdfUrl      String
+  content     Json // structured 6-slide content (companyName, tagline, + 6 title/bullets slides) — rendered client-side
   generatedAt DateTime @default(now())
 }
 

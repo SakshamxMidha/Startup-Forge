@@ -62,7 +62,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                     transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                   />
                 )}
-                <Icon className="w-4.5 h-4.5 w-[18px] h-[18px] relative z-10" />
+                <Icon className="w-[18px] h-[18px] relative z-10" />
                 <span className="relative z-10">{label}</span>
               </>
             )}
@@ -145,7 +145,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </AnimatePresence>
 
       <main className="relative flex-1 min-w-0 pt-14 lg:pt-0">
-        <FallingLeaves density={6} />
+        <FallingLeaves density={10} />
         <div className="relative z-10">{children}</div>
       </main>
     </div>

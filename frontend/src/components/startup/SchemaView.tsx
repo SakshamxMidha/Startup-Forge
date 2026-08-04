@@ -3,10 +3,8 @@ import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { revealUp as item, revealStagger as stagger, revealViewport } from '@/lib/motion';
 import type { SchemaDesign } from '@/types/api';
-
-const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
-const item = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0 } };
 
 export function SchemaView({ schema, mermaidDiagram }: { schema: SchemaDesign; mermaidDiagram: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -33,7 +31,7 @@ export function SchemaView({ schema, mermaidDiagram }: { schema: SchemaDesign; m
   }, [mermaidDiagram, schema.id]);
 
   return (
-    <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-5">
+    <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={revealViewport} className="space-y-5">
       <motion.div variants={item}>
         <Card hover className="p-6 overflow-x-auto relative">
           <div className="pointer-events-none absolute -top-10 -left-10 w-40 h-40 rounded-full bg-crimson/10 blur-3xl" />
@@ -49,7 +47,7 @@ export function SchemaView({ schema, mermaidDiagram }: { schema: SchemaDesign; m
         </Card>
       </motion.div>
 
-      <motion.div variants={stagger} className="grid sm:grid-cols-2 gap-4">
+      <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={revealViewport} className="grid sm:grid-cols-2 gap-4">
         {schema.entitiesJson.map(entity => (
           <motion.div key={entity.name} variants={item}>
             <Card hover className="p-5 h-full">
