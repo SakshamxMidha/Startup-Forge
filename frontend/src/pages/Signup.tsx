@@ -28,9 +28,13 @@ export default function Signup() {
     if (!validate()) return;
     setLoading(true);
     try {
-      await authApi.signup(email, password);
-      toast.success('Account created! Check your email for a code.');
-      navigate('/verify-email', { state: { email } });
+      const data = await authApi.signup(email, password);
+      if (data.emailFailed) {
+        toast.error(data.message);
+      } else {
+        toast.success('Account created! Check your email for a code.');
+      }
+      navigate('/verify-email', { state: { email, password } });
     } catch (err) {
       toast.error(extractError(err));
     } finally {

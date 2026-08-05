@@ -6,7 +6,12 @@ const transporter = nodemailer.createTransport({
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD,
   },
-});
+  // Render's containers don't support outbound IPv6; without this, Node can resolve Gmail's
+  // SMTP host to an IPv6 address first and fail with ENETUNREACH. `family` is a real,
+  // supported connection option (nodemailer forwards it to the underlying tls.connect call)
+  // that @types/nodemailer just doesn't model — hence the cast.
+  family: 4,
+} as nodemailer.TransportOptions);
 
 export async function sendVerificationEmail(to: string, code: string): Promise<void> {
   await transporter.sendMail({

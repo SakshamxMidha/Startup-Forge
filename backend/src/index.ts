@@ -1,4 +1,9 @@
 import 'dotenv/config';
+import dns from 'dns';
+// Render's containers don't support outbound IPv6. Without this, Node resolves hostnames
+// IPv6-first by default and any outbound call (Gmail SMTP, Gemini API, HN Algolia, etc.) can
+// silently fail with ENETUNREACH on an IPv6 address before ever trying IPv4.
+dns.setDefaultResultOrder('ipv4first');
 import express from 'express';
 import cors from 'cors';
 import prisma from './lib/prisma';

@@ -7,6 +7,7 @@ export interface TokenPair {
 export interface SignupResponse {
   message: string;
   userId: string;
+  emailFailed?: boolean;
 }
 
 export interface VerifyEmailResponse extends TokenPair {

@@ -50,16 +50,26 @@ router.post('/signup', async (req, res) => {
         data: { email, passwordHash, verificationCode, verificationCodeExpiresAt },
       });
 
+  let emailFailed = false;
   try {
     await sendVerificationEmail(email, verificationCode);
   } catch (error) {
     console.error('Failed to send verification email:', error);
+    emailFailed = true;
   }
 
-  res.status(201).json({
-    message: 'Account created. Please check your email for a verification code.',
-    userId: user.id,
-  });
+  res.status(201).json(
+    emailFailed
+      ? {
+          message: 'Account created, but we had trouble sending your verification email. Please try again or use "resend code".',
+          userId: user.id,
+          emailFailed: true,
+        }
+      : {
+          message: 'Account created. Please check your email for a verification code.',
+          userId: user.id,
+        }
+  );
 });
 
 router.post('/login', async (req, res) => {

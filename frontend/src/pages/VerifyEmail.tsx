@@ -13,9 +13,12 @@ export default function VerifyEmail() {
   const navigate = useNavigate();
   const location = useLocation();
   const { acceptTokens } = useAuth();
-  const [email, setEmail] = useState<string>((location.state as { email?: string })?.email ?? '');
+  const navState = location.state as { email?: string; password?: string } | null;
+  const [email, setEmail] = useState<string>(navState?.email ?? '');
+  const [password] = useState<string>(navState?.password ?? '');
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
 
   const onSubmit = async (ev: FormEvent) => {
     ev.preventDefault();
@@ -33,6 +36,31 @@ export default function VerifyEmail() {
       toast.error(extractError(err));
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Re-runs signup for the same account, which re-issues a fresh code and re-sends the
+  // email (backend /auth/signup already handles an existing unverified user this way).
+  // Only available when we still have the password from the signup navigation state —
+  // if that's gone (e.g. a page refresh), send them back to signup instead.
+  const resendCode = async () => {
+    if (!email || !password) {
+      toast.error('Please sign up again to get a fresh code.');
+      navigate('/signup');
+      return;
+    }
+    setResending(true);
+    try {
+      const data = await authApi.signup(email, password);
+      if (data.emailFailed) {
+        toast.error(data.message);
+      } else {
+        toast.success('New code sent — check your email.');
+      }
+    } catch (err) {
+      toast.error(extractError(err));
+    } finally {
+      setResending(false);
     }
   };
 
@@ -55,7 +83,19 @@ export default function VerifyEmail() {
         <Button type="submit" loading={loading} className="w-full" size="lg">Verify & continue</Button>
       </form>
       <p className="text-sm text-fg-muted text-center mt-6">
-        Wrong email? <Link to="/signup" className="text-crimson font-medium hover:underline">Sign up again</Link> to get a fresh code.
+        Didn't get a code?{' '}
+        {password ? (
+          <button
+            type="button"
+            onClick={resendCode}
+            disabled={resending}
+            className="text-crimson font-medium hover:underline disabled:opacity-50"
+          >
+            {resending ? 'Sending…' : 'Resend code'}
+          </button>
+        ) : (
+          <Link to="/signup" className="text-crimson font-medium hover:underline">Sign up again</Link>
+        )}
       </p>
     </AuthLayout>
   );
