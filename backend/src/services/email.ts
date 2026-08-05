@@ -1,21 +1,50 @@
 import nodemailer from 'nodemailer';
+import { resolve4 } from 'dns/promises';
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD,
-  },
-  // Render's containers don't support outbound IPv6; without this, Node can resolve Gmail's
-  // SMTP host to an IPv6 address first and fail with ENETUNREACH. `family` is a real,
-  // supported connection option (nodemailer forwards it to the underlying tls.connect call)
-  // that @types/nodemailer just doesn't model — hence the cast.
-  family: 4,
-} as nodemailer.TransportOptions);
+const GMAIL_SMTP_HOST = 'smtp.gmail.com';
 
-export async function sendVerificationEmail(to: string, code: string): Promise<void> {
+interface Mail {
+  to: string;
+  subject: string;
+  html: string;
+}
+
+// Render's containers have no outbound IPv6 route. Letting Nodemailer connect to
+// smtp.gmail.com by hostname leaves DNS resolution (and IPv6-vs-IPv4 selection) up to the
+// OS/Node's resolver, which was still landing on an IPv6 address and failing with
+// ENETUNREACH even with `family: 4` set. Resolving to a concrete IPv4 address ourselves and
+// connecting directly to it sidesteps that entirely.
+//
+// The address is re-resolved on every send rather than cached — Google's IPs rotate, and a
+// long-lived cached IP would just reintroduce the same class of failure later.
+async function sendGmail(mail: Mail): Promise<void> {
+  const addresses = await resolve4(GMAIL_SMTP_HOST);
+  if (addresses.length === 0) {
+    throw new Error(`DNS resolution for ${GMAIL_SMTP_HOST} returned no IPv4 addresses`);
+  }
+
+  const transporter = nodemailer.createTransport({
+    host: addresses[0],
+    port: 465,
+    secure: true,
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_APP_PASSWORD,
+    },
+    // Connecting by raw IP gives TLS nothing to check the certificate against by default —
+    // servername pins verification back to the real hostname (the cert is issued for
+    // smtp.gmail.com, not the IP), so certificate validation still works correctly.
+    tls: { servername: GMAIL_SMTP_HOST },
+  });
+
   await transporter.sendMail({
     from: `"StartupForge AI" <${process.env.GMAIL_USER}>`,
+    ...mail,
+  });
+}
+
+export async function sendVerificationEmail(to: string, code: string): Promise<void> {
+  await sendGmail({
     to,
     subject: 'Verify your StartupForge AI account',
     html: `
@@ -32,8 +61,7 @@ export async function sendVerificationEmail(to: string, code: string): Promise<v
 }
 
 export async function sendPasswordResetEmail(to: string, code: string): Promise<void> {
-  await transporter.sendMail({
-    from: `"StartupForge AI" <${process.env.GMAIL_USER}>`,
+  await sendGmail({
     to,
     subject: 'Reset your StartupForge AI password',
     html: `
