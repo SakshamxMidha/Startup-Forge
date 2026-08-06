@@ -1,50 +1,36 @@
-import nodemailer from 'nodemailer';
-import { resolve4 } from 'dns/promises';
-
-const GMAIL_SMTP_HOST = 'smtp.gmail.com';
-
 interface Mail {
   to: string;
   subject: string;
   html: string;
 }
 
-// Render's containers have no outbound IPv6 route. Letting Nodemailer connect to
-// smtp.gmail.com by hostname leaves DNS resolution (and IPv6-vs-IPv4 selection) up to the
-// OS/Node's resolver, which was still landing on an IPv6 address and failing with
-// ENETUNREACH even with `family: 4` set. Resolving to a concrete IPv4 address ourselves and
-// connecting directly to it sidesteps that entirely.
-//
-// The address is re-resolved on every send rather than cached — Google's IPs rotate, and a
-// long-lived cached IP would just reintroduce the same class of failure later.
-async function sendGmail(mail: Mail): Promise<void> {
-  const addresses = await resolve4(GMAIL_SMTP_HOST);
-  if (addresses.length === 0) {
-    throw new Error(`DNS resolution for ${GMAIL_SMTP_HOST} returned no IPv4 addresses`);
-  }
-
-  const transporter = nodemailer.createTransport({
-    host: addresses[0],
-    port: 465,
-    secure: true,
-    auth: {
-      user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_APP_PASSWORD,
+// Render's free tier blocks all outbound SMTP ports (25, 465, 587), so no SMTP-based sender
+// (Gmail/Nodemailer included) can work there. Brevo's transactional email API sends over
+// HTTPS instead, which isn't blocked.
+async function sendBrevoEmail(mail: Mail): Promise<void> {
+  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'api-key': process.env.BREVO_API_KEY as string,
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
     },
-    // Connecting by raw IP gives TLS nothing to check the certificate against by default —
-    // servername pins verification back to the real hostname (the cert is issued for
-    // smtp.gmail.com, not the IP), so certificate validation still works correctly.
-    tls: { servername: GMAIL_SMTP_HOST },
+    body: JSON.stringify({
+      sender: { name: 'StartupForge AI', email: process.env.BREVO_SENDER_EMAIL },
+      to: [{ email: mail.to }],
+      subject: mail.subject,
+      htmlContent: mail.html,
+    }),
   });
 
-  await transporter.sendMail({
-    from: `"StartupForge AI" <${process.env.GMAIL_USER}>`,
-    ...mail,
-  });
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`Brevo email send failed (${response.status}): ${body}`);
+  }
 }
 
 export async function sendVerificationEmail(to: string, code: string): Promise<void> {
-  await sendGmail({
+  await sendBrevoEmail({
     to,
     subject: 'Verify your StartupForge AI account',
     html: `
@@ -61,7 +47,7 @@ export async function sendVerificationEmail(to: string, code: string): Promise<v
 }
 
 export async function sendPasswordResetEmail(to: string, code: string): Promise<void> {
-  await sendGmail({
+  await sendBrevoEmail({
     to,
     subject: 'Reset your StartupForge AI password',
     html: `
